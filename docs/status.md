@@ -2,6 +2,17 @@
 
 What is built, newest first. Every deviation from the kickoff brief is stated here.
 
+## 2026-11-14 · Streaming parser (views-markup)
+
+Built: an iterative, linear scanner that returns a tree for every input. Incomplete tag names,
+attributes, expressions and closing tags at the end are held back; open tags are closed;
+malformed input becomes diagnostics with byte spans; nesting is bounded at 128. Tests: every
+prefix of a sample, malformed input, incomplete constructs, a 30,000-case fuzz.
+
+Deviation: the parser knows two tags. `Markdown` and `Code` keep their line breaks, and `Code`
+content is literal (no tags, no expressions), the way HTML treats `pre` and `script`. Without
+it, code samples would need every brace escaped.
+
 ## 2026-11-14 · Formula language (views-expr)
 
 Built: lexer, parser (depth-bounded, incomplete-aware errors), values, bounded evaluator with a
