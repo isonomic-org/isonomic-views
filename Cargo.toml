@@ -1,12 +1,13 @@
 [workspace]
 resolver = "2"
-members = ["crates/*"]
+members = ["crates/*", "xtask"]
 default-members = [
     "crates/views-expr",
     "crates/views-markup",
     "crates/views-ir",
     "crates/views-runtime",
     "crates/views-catalog",
+    "xtask",
 ]
 
 [workspace.package]
