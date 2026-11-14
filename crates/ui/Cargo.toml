@@ -1,0 +1,18 @@
+[package]
+name = "ui"
+description = "The single re-export of the Isonomic component library."
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+
+[features]
+# Headless windows and screenshots, for tests and the screenshot tool.
+test-support = ["kit/test-support"]
+
+[dependencies]
+# Pinned to an exact version until Isonomic UI has a release. This is the only place the
+# component library is named.
+kit = { package = "gpui-kit", version = "=0.9.1" }
+
+[lints]
+workspace = true
