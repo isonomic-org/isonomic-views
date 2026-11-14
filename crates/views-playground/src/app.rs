@@ -4,7 +4,7 @@ use ui::{
     AppContext, Context, Entity, FontWeight, IntoElement, ParentElement, Render, SharedString,
     Styled, Subscription, Task, Window,
     component::{
-        ActiveTheme, Disableable, Sizable,
+        Disableable, Sizable,
         button::{Button, ButtonVariants},
         h_flex,
         input::{InputEvent, Textarea, TextareaState},
@@ -108,7 +108,7 @@ impl Playground {
 
 impl Render for Playground {
     fn render(&mut self, _: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
-        let theme = cx.theme().clone();
+        let theme = views_gpui::style::tokens(cx);
         let pane = self.pane.read(cx);
         let src = pane.source().to_string();
         let diags = pane.diagnostics();

@@ -7,12 +7,12 @@ publish.workspace = true
 
 [features]
 # Headless windows and screenshots, for tests and the screenshot tool.
-test-support = ["kit/test-support"]
+test-support = ["isonomic-ui/test-support"]
 
 [dependencies]
-# Pinned to an exact version until Isonomic UI has a release. This is the only place the
-# component library is named.
-kit = { package = "gpui-kit", version = "=0.9.1" }
+# Isonomic UI, pinned to one commit of its main branch. This is the only place the component
+# library is named; move the pin forward deliberately, together with Cargo.lock.
+isonomic-ui = { git = "https://github.com/isonomic-org/isonomic-ui", rev = "5cdf1341cbdc8e34a899ea031b4ae1f4a0b860ee" }
 
 [lints]
 workspace = true

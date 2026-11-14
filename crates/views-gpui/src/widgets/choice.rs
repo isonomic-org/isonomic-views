@@ -3,7 +3,7 @@
 use ui::{
     AnyElement, AppContext, Context, IntoElement, ParentElement, SharedString, Styled, Window,
     component::{
-        ActiveTheme, IndexPath,
+        IndexPath,
         date_picker::{DatePicker, DatePickerEvent, DatePickerState},
         searchable_list::SearchableVec,
         select::{Select, SelectEvent, SelectState},
@@ -91,7 +91,7 @@ impl ViewPane {
                     .min_w(ui::px(40.))
                     .text_sm()
                     .text_right()
-                    .text_color(cx.theme().muted_foreground)
+                    .text_color(crate::style::tokens(cx).muted_foreground)
                     .child(text),
             )
             .into_any_element()

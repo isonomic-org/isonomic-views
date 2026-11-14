@@ -7,7 +7,6 @@ use ui::{
     AnyElement, Context, ElementId, FontWeight, InteractiveElement, IntoElement, ParentElement,
     SharedString, StatefulInteractiveElement, Styled, Window,
     component::{
-        ActiveTheme,
         accordion::Accordion,
         h_flex,
         separator::Separator,
@@ -159,7 +158,7 @@ impl ViewPane {
             return div().child(t).into_any_element();
         }
         let class = self.class(id);
-        let theme = cx.theme().clone();
+        let theme = style::tokens(cx);
         let el: AnyElement = match n.tag.as_str() {
             "View" => {
                 let kids = self.kids(id, frame, window, cx);

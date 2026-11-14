@@ -2,45 +2,52 @@
 
 A successor session can resume from this file alone.
 
-## Pull requests (stacked; each is based on the one before, so they merge in order)
+## Milestone 0: merged
 
-| # | Branch | Content | State |
-| --- | --- | --- | --- |
-| 1 | m0/01-expr | Workspace, docs, CI, formula language (views-expr) | open, CI green |
-| 2 | m0/02-markup | Streaming parser (views-markup) | open, CI green |
-| 3 | m0/03-ir | Node map, stable IDs, patches, limits, artifact operations (views-ir) | open, CI green |
-| 4 | m0/04-runtime | Scopes, reactive cache, actions, host (views-runtime) | open, CI green |
-| 5 | m0/05-catalog | Catalog, JSON Schema, authoring guide, validator (views-catalog) | open, CI green |
-| 6 | m0/06-renderer | ui, renderer, live UI tests, screenshot and report tools (views-gpui) | open |
-| 7 | m0/07-corpus | 49-view corpus, corpus tests, cargo xtask | open |
-| 8 | m0/08-playground | Playground (views-playground), final docs | open |
+All eight pull requests (#1 to #7 and #11) are merged into `main`, in order. The final report is
+the comment on #11; every deviation is in docs/status.md.
 
-Nothing is merged; Omar approves every merge. After a merge, the next pull request's base
-becomes `main` on GitHub automatically when its base branch is deleted, or change it by hand.
+## Milestone 1, in this order
 
-## Milestone 0 gate
+| Step | Issue | State |
+| --- | --- | --- |
+| 1. Switch `ui` from gpui-kit to isonomic-ui | #12 | pull request open |
+| 2. Incremental re-parse while streaming | #8 | next |
+| Shared state pushed to viewers | #9 | on hold until the engine has a shared-state store |
+| macOS CI | #10 | closed: folds into the shared CI's macOS job |
 
-All seven items are met; the evidence is in the final report on pull request 8 and in
-docs/status.md. `cargo xtask report` on the build machine (release, software renderer):
-500-node view (641 nodes) parse, evaluate, build, layout and paint in 11.3 ms against a 16.7 ms
-frame; 0.88 ms per streamed node against 1 ms.
+Merges after this batch need Omar's go-ahead in chat.
 
-## Next issues
+## Decisions from the master session (November 14, 2026)
 
-1. Shared-store sync by notification instead of per-frame polling, and a collaborative store.
-2. Incremental re-parse for streaming (re-parse only the open tail), to widen the per-node
-   margin on large views.
-3. A macOS CI job with screenshots on Metal, and committed reference screenshots.
+- Shared CI: the Desktop session creates `isonomic-org/.github` with `rust-ci.yml` (inputs:
+  apt-packages, extra-steps, upload-artifact-path, rust-toolchain, a macOS job toggle). Switch
+  `.github/workflows/ci.yml` to it with a one-line change once it exists.
+- Isonomic UI: depend on the `isonomic-ui` crate pinned to a git revision. Catalog icon names
+  map to `IconName` in one table and theme reads stay in `views-gpui/src/style.rs`.
+- `Cargo.lock` is exempt from the 20 KB rule. Commit it, pushing with git from Omar's Mac when
+  the connector can't take it, and use `--locked` in CI.
+- Host and SharedStore for Chat artifacts: the engine side (grants, persistence, push) is the
+  Desktop session's; binding artifacts to the SDK is the Chat session's. Grants are per
+  artifact, start empty, are always shown to the user, and are decided and stored by the
+  engine, never by the artifact. Keep the fixture host for tests.
 
 ## Environment notes
 
-- Pushing: the GitHub connector (`push_files`) works for normal files. It cannot write
-  `.github/workflows/*` (403); workflow files are added through the github.com web editor.
-  Verify a push by comparing `git hash-object` (or `git write-tree` of a staged copy) with
-  the tree and blob SHAs the connector reports.
-- Check runs cannot be read through the connector (403); read them on the Actions page.
+- The repo needs the private `isonomic-org/isonomic-ui`. CI reads it with the read-only deploy
+  key in the `UI_DEPLOY_KEY` secret (`.github/ui-access.sh`).
+- Building in the cloud sandbox: it cannot reach isonomic-ui directly. Make a git bundle of the
+  pinned commit on Omar's Mac in `~/Code/isonomic/views-share` (a folder shared with the
+  session), stage it in, clone it bare, and point git at it with
+  `git config --global url."file:///<mirror>.git".insteadOf "https://github.com/isonomic-org/isonomic-ui"`
+  plus `CARGO_NET_GIT_FETCH_WITH_CLI=true`. Cargo.lock still records the real URL.
+- Pushing: Omar's Mac has a clone at `~/Code/isonomic/repos/isonomic-views`. Source
+  `~/Code/isonomic/repos/.views-env.sh` first: it routes git over HTTPS through `gh` (signed in
+  as QadmiriOmar) and sets the commit identity to Omar Qadmiri <omar@isonomic.com>. The Mac's
+  global git identity and keychain belong to a different account; never use them. Bring changes
+  over as a patch through the shared folder and `git apply` them there.
+- The connector (`push_files`) still works for small files but cannot write
+  `.github/workflows/*` and fails on files over about 25 KB. Check runs are not readable through
+  it; `mergeable_state` from `pull_request_read` (`clean`) shows checks are green.
 - Rendering on Linux: install `mesa-vulkan-drivers libxkbcommon-dev libwayland-dev
   libxcb1-dev libx11-xcb-dev libasound2-dev libfontconfig-dev libfreetype-dev libvulkan-dev`.
-  A cold build of the component library takes about 10 minutes on 2 cores.
-- Shared CI: when `isonomic-org/.github/.github/workflows/rust-ci.yml` exists, replace the jobs
-  in `.github/workflows/ci.yml` with `uses: isonomic-org/.github/.github/workflows/rust-ci.yml@main`.
