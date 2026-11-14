@@ -2,6 +2,21 @@
 
 What is built, newest first. Every deviation from the kickoff brief is stated here.
 
+## 2026-11-14 · Node map, IDs and patches (views-ir)
+
+Built: lowering from markup to a flat node map; stable IDs by aligning each re-parse against
+the previous map (explicit keys, then a weighted longest common subsequence over content
+fingerprints, then identical subtrees out of order); patches (insert, remove, move, set_prop,
+set_text, set_meta) with minimal moves; apply; hard limits on nodes, depth, source, text,
+lists, expression steps and render time; `Artifact` for create (append) and update (edits that
+must each match exactly once, all or nothing). Tests: every prefix of a sample keeps the IDs of
+complete nodes and patches reproduce the map; a one-line edit gives one visible patch; 400
+random edits round-trip through patches; each limit.
+
+Deviation: patches carry a sixth kind, `set_meta`, for source spans and completeness. It
+changes nothing on screen and `Patch::is_visible` filters it out; without it the map and the
+patched map would drift apart.
+
 ## 2026-11-14 · Streaming parser (views-markup)
 
 Built: an iterative, linear scanner that returns a tree for every input. Incomplete tag names,
