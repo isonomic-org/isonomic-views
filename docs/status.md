@@ -2,6 +2,24 @@
 
 What is built, newest first. Every deviation from the kickoff brief is stated here.
 
+## 2026-11-14 · Catalog, schema, guide and validator (views-catalog)
+
+Built: catalog 0.1 with 42 components (each with typed props, events, accessibility role,
+allowed children and an example); design tokens (tones, palette, spacing and size steps,
+heights, icons); the class-utility subset (layout and spacing, token values only); a JSON
+Schema for the tree form; a plain-text authoring guide generated from the catalog; and a
+validator that checks tags, placement, children, props, literal values, classes, bindings,
+actions and every name and function used, with "did you mean" hints. Diagnostics serialize
+as JSON (`code`, `severity`, `message`, `span`, `node`, `hint`).
+
+Deviations:
+- Two sub-tags beyond the brief's list: `Tab` (inside `Tabs`) and `Section` (inside
+  `Accordion`), so each page or section is ordinary markup with its own children.
+- The icon list is the part of the component library's icon set that its default asset bundle
+  embeds (64 names). Other names render as a neutral square rather than nothing.
+- The generated guide and schema are produced by `cargo xtask guide` into `target/generated/`
+  and are not committed; the tests check they come from the catalog.
+
 ## 2026-11-14 · State and actions (views-runtime)
 
 Built: the three scopes (`local` per viewer; `shared` behind the `SharedStore` trait, with an
