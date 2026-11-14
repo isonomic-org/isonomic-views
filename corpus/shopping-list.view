@@ -1,0 +1,10 @@
+<View version="0.1" title="Shopping list" shared={{ items: ["Oat milk", "Coffee beans", "Lemons"] }} local={{ item: "" }}>
+  <Card title="Shopping list" description="Shared with the house.">
+    <List items={shared.items} empty="Nothing to buy." />
+    <Row class="gap-2">
+      <TextField bind={local.item} placeholder="Add an item" class="flex-1" />
+      <Button variant="primary" onClick={append(shared.items, local.item); reset(local.item)}>Add</Button>
+      <Button variant="danger" disabled={len(shared.items) == 0} onClick={remove(shared.items, len(shared.items) - 1)}>Remove last</Button>
+    </Row>
+  </Card>
+</View>

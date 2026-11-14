@@ -1,0 +1,14 @@
+<View version="0.1" title="Sales dashboard">
+  <Col class="gap-4 p-4">
+    <Heading>Sales, first half</Heading>
+    <Grid cols={3} class="gap-3">
+      <Card><Stat label="Revenue" value={currency(data.sales.total, "USD", 0)} delta={"+" + percent(data.sales.growth, 1)} /></Card>
+      <Card><Stat label="Orders" value={number(sum(data.sales.months, m => m.orders))} /></Card>
+      <Card><Stat label="Average order" value={currency(data.sales.total / sum(data.sales.months, m => m.orders))} /></Card>
+    </Grid>
+    <Grid cols={2} class="gap-3">
+      <Card title="Revenue by month"><Chart type="bar" data={data.sales.months} x="month" y="revenue" height="sm" /></Card>
+      <Card title="Orders by month"><Chart type="line" data={data.sales.months} x="month" y="orders" color="chart-2" height="sm" /></Card>
+    </Grid>
+  </Col>
+</View>

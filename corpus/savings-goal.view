@@ -1,0 +1,11 @@
+<View version="0.1" title="Savings goal" shared={{ goal: 8000, saved: 2350, by: "2027-08-01" }}>
+  <Card title="Trip to Japan" description={"Target date " + formatDate(date(shared.by))}>
+    <Grid cols={2} class="gap-3">
+      <NumberInput bind={shared.goal} prefix="$" step={100} label="Goal" />
+      <NumberInput bind={shared.saved} prefix="$" step={50} label="Saved" />
+    </Grid>
+    <DatePicker bind={shared.by} label="Target date" />
+    <Progress value={shared.saved / shared.goal * 100} tone="success" label="Saved" />
+    <Stat label="Save each week" value={currency((shared.goal - shared.saved) / max(1, daysBetween(date("2026-11-14"), date(shared.by)) / 7))} caption={plural(round(daysBetween(date("2026-11-14"), date(shared.by)) / 7), "week", "weeks") + " left from Nov 14, 2026"} />
+  </Card>
+</View>

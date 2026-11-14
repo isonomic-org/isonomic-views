@@ -1,0 +1,12 @@
+<View version="0.1" title="Project timeline" shared={{ launch: "2027-02-01" }}>
+  <Col class="gap-3 p-4">
+    <Heading>Launch timeline</Heading>
+    <DatePicker bind={shared.launch} label="Launch date" />
+    <List ordered items={[
+      {title: "Design freeze", description: formatDate(addDays(date(shared.launch), -42)), badge: "6 weeks out"},
+      {title: "Beta to customers", description: formatDate(addDays(date(shared.launch), -21)), badge: "3 weeks out"},
+      {title: "Press briefing", description: formatDate(addDays(date(shared.launch), -7)), badge: "1 week out"},
+      {title: "Launch", description: formatDate(date(shared.launch), "EEEE, MMMM d, yyyy"), badge: "Day 0"}
+    ]} />
+  </Col>
+</View>

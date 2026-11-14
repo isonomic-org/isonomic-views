@@ -1,0 +1,12 @@
+<View version="0.1" title="Tip splitter" local={{ bill: 86.4, tip: "18", people: 3 }}>
+  <Col class="gap-3 p-4 max-w-128">
+    <Heading level={2}>Split the bill</Heading>
+    <NumberInput bind={local.bill} prefix="$" step={1} label="Bill" />
+    <SegmentedControl bind={local.tip} options={[{label: "15%", value: "15"}, {label: "18%", value: "18"}, {label: "20%", value: "20"}, {label: "25%", value: "25"}]} />
+    <NumberInput bind={local.people} min={1} max={20} label="People" />
+    <Grid cols={2} class="gap-3">
+      <Stat label="Tip" value={currency(local.bill * num(local.tip) / 100)} />
+      <Stat label="Each pays" tone="accent" value={currency(local.bill * (1 + num(local.tip) / 100) / local.people)} />
+    </Grid>
+  </Col>
+</View>

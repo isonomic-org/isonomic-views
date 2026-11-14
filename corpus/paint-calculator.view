@@ -1,0 +1,14 @@
+<View version="0.1" title="Paint calculator" local={{ width: 4.2, length: 3.6, height: 2.5, coats: "2" }}>
+  <Card title="How much paint?" description="For the walls of one room.">
+    <Grid cols={3} class="gap-3">
+      <NumberInput bind={local.width} step={0.1} suffix="m" label="Width" />
+      <NumberInput bind={local.length} step={0.1} suffix="m" label="Length" />
+      <NumberInput bind={local.height} step={0.1} suffix="m" label="Height" />
+    </Grid>
+    <SegmentedControl bind={local.coats} options={[{label: "1 coat", value: "1"}, {label: "2 coats", value: "2"}, {label: "3 coats", value: "3"}]} />
+    <Row class="gap-6" align="start">
+      <Stat label="Wall area" value={number(2 * (local.width + local.length) * local.height, 1) + " m²"} />
+      <Stat label="Paint needed" tone="accent" value={number(ceil(2 * (local.width + local.length) * local.height * num(local.coats) / 10 * 2) / 2, 1) + " L"} caption="At 10 m² per litre" />
+    </Row>
+  </Card>
+</View>

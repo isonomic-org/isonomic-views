@@ -1,0 +1,21 @@
+<View version="0.1" title="To-do list" shared={{ todos: [{id: 1, title: "Draft the launch post", done: false}, {id: 2, title: "Book the venue", done: true}], next: 3 }} local={{ text: "", filter: "All" }}>
+  <Col class="gap-3 p-4">
+    <Row>
+      <Heading>To-do</Heading>
+      <Spacer />
+      <SegmentedControl bind={local.filter} options={["All", "Open", "Done"]} />
+    </Row>
+    <Row class="gap-2">
+      <TextField bind={local.text} placeholder="What needs doing?" class="flex-1" />
+      <Button variant="primary" icon="plus" disabled={trim(local.text) == ""} onClick={append(shared.todos, {id: shared.next, title: trim(local.text), done: false}); set(shared.next, shared.next + 1); reset(local.text)}>Add</Button>
+    </Row>
+    <For each={filter(shared.todos, t => local.filter == "All" || (local.filter == "Done") == t.done)} as="t" key={t.id}>
+      <Row class="gap-2">
+        <Checkbox bind={t.done} label={t.title} />
+        <Spacer />
+        <Button variant="ghost" size="sm" onClick={remove(shared.todos, x => x.id == t.id)}>Delete</Button>
+      </Row>
+    </For>
+    <Text tone="muted" size="sm">{plural(count(shared.todos, t => !t.done), "item", "items")} left</Text>
+  </Col>
+</View>

@@ -1,0 +1,19 @@
+<View version="0.1" title="Type and layout">
+  <Col class="gap-2 p-4">
+    <Heading level={1}>Heading one</Heading>
+    <Heading level={2}>Heading two</Heading>
+    <Heading level={3}>Heading three</Heading>
+    <Heading level={4}>Heading four</Heading>
+    <Text>Body text in the default size.</Text>
+    <Text size="sm" tone="muted">Small muted text for captions.</Text>
+    <Text weight="semibold" tone="accent">Accent, semibold.</Text>
+    <Row class="gap-2 wrap">
+      <Badge tone="neutral">neutral</Badge><Badge tone="info">info</Badge><Badge tone="success">success</Badge>
+      <Badge tone="warning">warning</Badge><Badge tone="danger">danger</Badge><Badge tone="accent">accent</Badge>
+    </Row>
+    <Row class="gap-2">
+      <Button variant="primary">Primary</Button><Button>Secondary</Button><Button variant="outline">Outline</Button>
+      <Button variant="ghost">Ghost</Button><Button variant="danger">Danger</Button><Button disabled>Disabled</Button>
+    </Row>
+  </Col>
+</View>

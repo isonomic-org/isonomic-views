@@ -1,0 +1,16 @@
+<View version="0.1" title="Plan comparison">
+  <Col class="gap-3 p-4">
+    <Heading>Compare plans</Heading>
+    <Table rows={[
+      {feature: "Seats", free: "1", pro: "10", team: "Unlimited"},
+      {feature: "Storage", free: "5 GB", pro: "100 GB", team: "1 TB"},
+      {feature: "Version history", free: "7 days", pro: "90 days", team: "Forever"},
+      {feature: "Priority support", free: "No", pro: "Yes", team: "Yes"}
+    ]} columns={[{key: "feature", label: "Feature"}, {key: "free", label: "Free"}, {key: "pro", label: "Pro"}, {key: "team", label: "Team"}]} />
+    <Row class="gap-2">
+      <Badge tone="neutral">Free</Badge>
+      <Badge tone="accent">Pro: most popular</Badge>
+      <Badge tone="success">Team: 20% off yearly</Badge>
+    </Row>
+  </Col>
+</View>
