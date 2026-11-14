@@ -2,6 +2,29 @@
 
 What is built, newest first. Every deviation from the kickoff brief is stated here.
 
+## 2026-11-14 · Renderer (ui, views-gpui)
+
+Built: the `ui` crate, the only place GPUI Kit is named (pinned `=0.9.1`); `ViewPane`, a
+component that takes a source whole, streamed or as edits and renders it with real kit
+components; a keyed reconciler that keeps component state (input text, slider, select, date
+picker, selected tab, open sections) per node ID and loop instance; mapping of tones, palette,
+spacing, radii and class utilities onto the theme; a frame clock that cuts a slow frame at the
+render budget; a visible placeholder for unknown tags; headless rendering for screenshots and
+timings. Tests (offscreen, real components): a slider move changes the dependent Stat in the
+same frame; two panes over one store share `shared` and keep their own `local`; typed text and
+the slider keep their state entities across an edit elsewhere; every streamed prefix renders
+and the slider keeps one ID; a slow view is cut by the time budget; an unknown tag shows a
+placeholder.
+
+Deviations:
+- The slider test sets the slider's value and emits its change event, rather than simulating a
+  pointer drag; the drag itself is the kit's code.
+- Charts have their appear animation turned off; animation is out of scope for this milestone.
+- `Kbd` key caps are drawn from theme tokens, because the kit's `Kbd` only takes keys known at
+  compile time.
+- The headless crates are the workspace's default members, so `cargo test` alone needs no GPU;
+  CI runs the whole workspace with rendering on Mesa's software Vulkan driver.
+
 ## 2026-11-14 · Catalog, schema, guide and validator (views-catalog)
 
 Built: catalog 0.1 with 42 components (each with typed props, events, accessibility role,

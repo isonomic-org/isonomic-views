@@ -1,6 +1,13 @@
 [workspace]
 resolver = "2"
 members = ["crates/*"]
+default-members = [
+    "crates/views-expr",
+    "crates/views-markup",
+    "crates/views-ir",
+    "crates/views-runtime",
+    "crates/views-catalog",
+]
 
 [workspace.package]
 version = "0.1.0"
