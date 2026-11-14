@@ -1,0 +1,33 @@
+[workspace]
+resolver = "2"
+members = ["crates/*"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+publish = false
+rust-version = "1.90"
+
+[workspace.dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+views-expr = { path = "crates/views-expr" }
+views-markup = { path = "crates/views-markup" }
+views-ir = { path = "crates/views-ir" }
+views-runtime = { path = "crates/views-runtime" }
+views-catalog = { path = "crates/views-catalog" }
+views-gpui = { path = "crates/views-gpui" }
+ui = { path = "crates/ui" }
+
+[workspace.lints.rust]
+unsafe_code = "forbid"
+
+[workspace.lints.clippy]
+dbg_macro = "deny"
+todo = "deny"
+
+[profile.dev]
+debug = 0
+
+[profile.dev.package."*"]
+opt-level = 1
