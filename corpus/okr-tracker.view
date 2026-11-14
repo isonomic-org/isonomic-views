@@ -4,7 +4,7 @@
     <For each={shared.krs} as="kr">
       <Card title={kr.name}>
         <Progress value={min(100, kr.now / kr.goal * 100)} label={number(kr.now) + " of " + number(kr.goal)} tone={kr.now >= kr.goal ? "success" : "accent"} />
-        <Slider bind={kr.now} min={0} max={kr.goal * 1.5} />
+        <Slider bind={kr.now} min={0} max={kr.goal * 2} />
       </Card>
     </For>
   </Col>
