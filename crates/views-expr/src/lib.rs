@@ -8,6 +8,7 @@ mod date;
 mod deps;
 mod eval;
 mod format;
+mod functions;
 mod lexer;
 mod parser;
 mod stdlib;
@@ -21,8 +22,8 @@ pub use eval::{
     Empty, ErrorKind, EvalError, EvalResult, Evaluator, Limits, Scope, compare, evaluate,
 };
 pub use format::{compact, currency, grouped, percent};
+pub use functions::FUNCTIONS;
 pub use parser::{BinOp, Expr, MAX_DEPTH, UnOp, parse, parse_seq};
-pub use stdlib::FUNCTIONS;
 pub use value::{Value, fmt_num};
 
 /// A syntax error, with the byte offset where it was found.
