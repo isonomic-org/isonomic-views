@@ -1,0 +1,12 @@
+<View version="0.1" title="Feedback" local={{ score: "4", text: "", sent: false }}>
+  <Card title="How was your session?">
+    <SegmentedControl bind={local.score} options={["1", "2", "3", "4", "5"]} />
+    <TextArea bind={local.text} rows={4} placeholder="What could be better?" />
+    <Row>
+      <Text tone="muted" size="sm">{len(local.text)} / 500</Text>
+      <Spacer />
+      <Button variant="primary" icon="arrow-right" disabled={len(local.text) > 500} onClick={call("send_feedback", {score: num(local.score), text: local.text}); set(local.sent, true)}>Send</Button>
+    </Row>
+    <If when={local.sent}><Callout tone="info">Feedback sent. Thank you.</Callout></If>
+  </Card>
+</View>

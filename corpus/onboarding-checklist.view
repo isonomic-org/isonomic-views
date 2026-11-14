@@ -1,0 +1,11 @@
+<View version="0.1" title="Onboarding" shared={{ steps: [{t: "Create your workspace", done: true}, {t: "Invite two teammates", done: false}, {t: "Connect a data source", done: false}, {t: "Publish your first view", done: false}] }}>
+  <Card title="Get set up" description="Four steps to a working workspace.">
+    <Progress value={count(shared.steps, s => s.done) * 25} label="Progress" tone="accent" />
+    <For each={shared.steps} as="s">
+      <Switch bind={s.done} label={s.t} />
+    </For>
+    <If when={all(shared.steps, s => s.done)}>
+      <Callout tone="success" title="All done">Your workspace is ready.</Callout>
+    </If>
+  </Card>
+</View>

@@ -1,0 +1,14 @@
+<View version="0.1" title="Grade calculator" shared={{ parts: [{name: "Homework", weight: 20, score: 92}, {name: "Midterm", weight: 30, score: 78}, {name: "Final", weight: 50, score: 85}] }}>
+  <Col class="gap-3 p-4">
+    <Heading>Course grade</Heading>
+    <For each={shared.parts} as="p">
+      <Row class="gap-3">
+        <Text weight="medium" class="w-32">{p.name}</Text>
+        <Text tone="muted" size="sm" class="w-24">{p.weight}% weight</Text>
+        <NumberInput bind={p.score} min={0} max={100} suffix="%" class="flex-1" />
+      </Row>
+    </For>
+    <Divider />
+    <Stat label="Weighted grade" tone="accent" value={number(sum(shared.parts, p => p.weight * p.score) / sum(shared.parts, p => p.weight), 1) + "%"} caption={sum(shared.parts, p => p.weight * p.score) / 100 >= 90 ? "A" : sum(shared.parts, p => p.weight * p.score) / 100 >= 80 ? "B" : "C or below"} />
+  </Col>
+</View>

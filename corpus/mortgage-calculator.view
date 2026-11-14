@@ -1,0 +1,15 @@
+<View version="0.1" title="Mortgage calculator" local={{ price: 420000, down: 20, rate: 6.4, years: "30" }}>
+  <Card title="Mortgage calculator" description="Estimate a monthly payment.">
+    <Grid cols={2} class="gap-4">
+      <NumberInput bind={local.price} prefix="$" step={5000} label="Home price" />
+      <NumberInput bind={local.rate} suffix="%" step={0.1} label="Interest rate" />
+    </Grid>
+    <Slider bind={local.down} min={0} max={60} label="Down payment (%)" />
+    <SegmentedControl bind={local.years} options={["15", "20", "30"]} />
+    <Divider />
+    <Row class="gap-6" align="start">
+      <Stat label="Monthly payment" tone="accent" value={currency((local.price * (1 - local.down / 100)) * (local.rate / 1200) / (1 - pow(1 + local.rate / 1200, -num(local.years) * 12)))} />
+      <Stat label="Loan amount" value={currency(local.price * (1 - local.down / 100), "USD", 0)} />
+    </Row>
+  </Card>
+</View>

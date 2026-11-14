@@ -1,0 +1,13 @@
+<View version="0.1" title="Compound interest" local={{ start: 10000, monthly: 300, rate: 7, years: 20 }}>
+  <Col class="gap-3 p-4">
+    <Heading>Compound interest</Heading>
+    <Grid cols={2} class="gap-3">
+      <NumberInput bind={local.start} prefix="$" step={1000} label="Starting amount" />
+      <NumberInput bind={local.monthly} prefix="$" step={50} label="Monthly contribution" />
+    </Grid>
+    <Slider bind={local.rate} min={0} max={15} step={0.5} label="Annual return (%)" />
+    <Slider bind={local.years} min={1} max={40} label="Years" />
+    <Chart type="line" height="sm" data={map(range(local.years + 1), y => {year: text(y), value: round(local.start * pow(1 + local.rate / 100, y) + local.monthly * 12 * (pow(1 + local.rate / 100, y) - 1) / max(local.rate / 100, 0.0001))})} x="year" y="value" />
+    <Stat label={"After " + plural(local.years, "year", "years")} tone="success" value={currency(local.start * pow(1 + local.rate / 100, local.years) + local.monthly * 12 * (pow(1 + local.rate / 100, local.years) - 1) / max(local.rate / 100, 0.0001), "USD", 0)} />
+  </Col>
+</View>

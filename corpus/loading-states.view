@@ -1,0 +1,17 @@
+<View version="0.1" title="Loading states" local={{ loading: true }}>
+  <Col class="gap-3 p-4">
+    <Row>
+      <Heading>Recent activity</Heading>
+      <Spacer />
+      <Switch bind={local.loading} label="Loading" />
+    </Row>
+    <If when={local.loading}>
+      <Spinner label="Fetching activity" />
+      <Skeleton lines={4} />
+      <Skeleton height="xs" />
+    </If>
+    <If when={!local.loading}>
+      <List items={[{title: "Grace merged the budget view", description: "2 minutes ago"}, {title: "Alan commented on Q1 goals", description: "1 hour ago"}]} />
+    </If>
+  </Col>
+</View>

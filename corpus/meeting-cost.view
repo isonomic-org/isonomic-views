@@ -1,0 +1,11 @@
+<View version="0.1" title="Meeting cost" local={{ people: 8, rate: 85, minutes: 45 }}>
+  <Card title="What does this meeting cost?">
+    <Slider bind={local.people} min={2} max={40} label="People" />
+    <Slider bind={local.rate} min={20} max={300} step={5} label="Average hourly cost ($)" />
+    <Slider bind={local.minutes} min={15} max={180} step={15} label="Minutes" />
+    <Row class="gap-6" align="start">
+      <Stat label="This meeting" value={currency(local.people * local.rate * local.minutes / 60, "USD", 0)} tone="danger" />
+      <Stat label="Weekly, for a year" value={compact(local.people * local.rate * local.minutes / 60 * 52)} caption="dollars" />
+    </Row>
+  </Card>
+</View>

@@ -1,0 +1,17 @@
+<View version="0.1" title="Glossary" local={{ q: "" }}>
+  <Col class="gap-3 p-4">
+    <Heading>Finance glossary</Heading>
+    <TextField bind={local.q} placeholder="Filter terms" />
+    <ScrollArea height="sm">
+      <List items={filter([
+        {title: "Amortization", description: "Paying off a debt in regular instalments over time."},
+        {title: "APR", description: "Annual percentage rate: the yearly cost of borrowing, including fees."},
+        {title: "Equity", description: "The part of an asset you own outright."},
+        {title: "Escrow", description: "Money held by a third party until conditions are met."},
+        {title: "Liquidity", description: "How quickly an asset can become cash."},
+        {title: "Principal", description: "The amount borrowed, before interest."},
+        {title: "Yield", description: "Income from an investment as a share of its price."}
+      ], t => contains(lower(t.title), lower(local.q)))} empty="No terms match." />
+    </ScrollArea>
+  </Col>
+</View>

@@ -1,0 +1,12 @@
+<View version="0.1" title="FAQ">
+  <Col class="gap-3 p-4">
+    <Heading>Frequently asked questions</Heading>
+    <Accordion>
+      <Section title="Can I cancel anytime?"><Text>Yes. Your plan stays active until the end of the billing period.</Text></Section>
+      <Section title="Do you offer refunds?"><Text>Within 14 days of purchase, no questions asked.</Text></Section>
+      <Section title="Is my data encrypted?" open><Text>Everything is encrypted at rest with a key only your workspace holds.</Text></Section>
+      <Section title="Can I export my work?"><Text>Every document exports to Markdown, PDF and JSON.</Text></Section>
+    </Accordion>
+    <Row class="gap-1"><Text tone="muted">Still stuck?</Text><Link to="support:new">Contact support</Link></Row>
+  </Col>
+</View>

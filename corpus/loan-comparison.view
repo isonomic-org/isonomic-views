@@ -1,0 +1,14 @@
+<View version="0.1" title="Loan comparison" local={{ amount: 25000 }}>
+  <Col class="gap-3 p-4">
+    <Heading>Compare loan offers</Heading>
+    <NumberInput bind={local.amount} prefix="$" step={1000} label="Amount" />
+    <Grid cols={3} class="gap-3">
+      <For each={[{bank: "Credit union", rate: 6.9, months: 36}, {bank: "Online lender", rate: 8.4, months: 48}, {bank: "Big bank", rate: 9.2, months: 60}]} as="o">
+        <Card title={o.bank} description={o.rate + "% for " + o.months + " months"}>
+          <Stat label="Monthly" value={currency(local.amount * (o.rate / 1200) / (1 - pow(1 + o.rate / 1200, -o.months)))} />
+          <Stat label="Total interest" value={currency(local.amount * (o.rate / 1200) / (1 - pow(1 + o.rate / 1200, -o.months)) * o.months - local.amount, "USD", 0)} tone="warning" />
+        </Card>
+      </For>
+    </Grid>
+  </Col>
+</View>

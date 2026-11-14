@@ -1,0 +1,11 @@
+<View version="0.1" title="Quarterly goals" shared={{ krs: [{name: "Weekly active teams", now: 410, goal: 600}, {name: "Activation rate", now: 38, goal: 50}, {name: "Median load time (ms)", now: 820, goal: 500}] }}>
+  <Col class="gap-3 p-4">
+    <Heading>Q1 goals</Heading>
+    <For each={shared.krs} as="kr">
+      <Card title={kr.name}>
+        <Progress value={min(100, kr.now / kr.goal * 100)} label={number(kr.now) + " of " + number(kr.goal)} tone={kr.now >= kr.goal ? "success" : "accent"} />
+        <Slider bind={kr.now} min={0} max={kr.goal * 1.5} />
+      </Card>
+    </For>
+  </Col>
+</View>
