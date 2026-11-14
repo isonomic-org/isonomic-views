@@ -2,6 +2,23 @@
 
 What is built, newest first. Every deviation from the kickoff brief is stated here.
 
+## 2026-11-14 · Playground (views-playground) and the Milestone 0 gate
+
+Built: `cargo run -p views-playground` with the source on the left (edits re-render live), the
+view on the right, diagnostics with line and column below, four corpus examples, and "Replay as
+a stream", which feeds the current source in six characters every 16 ms. An offscreen test
+renders the playground; its screenshot was looked at.
+
+Gate, as measured on the build machine (Linux, release build, Mesa software renderer):
+`cargo xtask report` draws a 641-node view in 11.3 ms (parse 1.2, evaluate 1.2, build 0.9,
+layout and paint 8.0) against a 16.7 ms frame, and streams it at 0.88 ms per node against
+1 ms. The per-node margin is thin because each chunk re-parses the whole source.
+
+Deviations:
+- No macOS CI job. CI runs on Linux; the Mac build is the same code but is not exercised in CI.
+- The pull requests carry the issue briefs (Context, Acceptance criteria, Files in scope, Out
+  of scope) in their descriptions instead of separate GitHub issues.
+
 ## 2026-11-14 · Corpus and xtask
 
 Built: 49 corpus views (calculators, forms, dashboards, explainers, trackers, quizzes) that

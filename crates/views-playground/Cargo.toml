@@ -1,0 +1,18 @@
+[package]
+name = "views-playground"
+description = "Live editor for Isonomic Views: source, render, diagnostics, replay."
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+
+[dependencies]
+ui.workspace = true
+views-gpui.workspace = true
+views-ir.workspace = true
+views-runtime.workspace = true
+
+[dev-dependencies]
+ui = { workspace = true, features = ["test-support"] }
+
+[lints]
+workspace = true
