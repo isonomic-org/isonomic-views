@@ -1,0 +1,18 @@
+<View version="0.1" title="How photosynthesis works">
+  <Col class="gap-3 p-4">
+    <Heading level={1}>How photosynthesis works</Heading>
+    <Markdown>
+      Plants turn **light**, **water** and **carbon dioxide** into sugar and oxygen.
+      It happens in the chloroplasts, mostly in the leaves.
+    </Markdown>
+    <Accordion>
+      <Section title="1. Light reactions" open>
+        <Text>Chlorophyll absorbs light and splits water, releasing oxygen and storing energy in ATP and NADPH.</Text>
+      </Section>
+      <Section title="2. The Calvin cycle">
+        <Text>Using that stored energy, the plant fixes carbon dioxide into glucose.</Text>
+      </Section>
+    </Accordion>
+    <Callout tone="info" title="The equation">6 CO2 + 6 H2O + light → C6H12O6 + 6 O2</Callout>
+  </Col>
+</View>

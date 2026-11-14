@@ -1,0 +1,6 @@
+<View version="0.1" title="Recipe scaler" local={{ servings: 4 }}>
+  <Card title="Pancakes" description="Original recipe serves 4.">
+    <NumberInput bind={local.servings} min={1} max={24} label="Servings" />
+    <List items={map([{q: 200, u: "g", what: "flour"}, {q: 2, u: "", what: "eggs"}, {q: 300, u: "ml", what: "milk"}, {q: 1, u: "tbsp", what: "sugar"}], i => {title: text(round(i.q * local.servings / 4, 1)) + (i.u == "" ? "" : " " + i.u) + " " + i.what})} />
+  </Card>
+</View>

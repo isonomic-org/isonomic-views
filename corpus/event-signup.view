@@ -1,0 +1,17 @@
+<View version="0.1" title="Event sign-up" local={{ name: "", email: "", session: "Morning", date: "2027-03-12", diet: "", agree: false, sent: false }}>
+  <Card title="Design meetup sign-up" description="Saturday workshops in March.">
+    <Grid cols={2} class="gap-3">
+      <TextField bind={local.name} label="Name" placeholder="Your name" />
+      <TextField bind={local.email} label="Email" placeholder="you@example.com" />
+      <Select bind={local.session} label="Session" options={["Morning", "Afternoon", "Evening"]} />
+      <DatePicker bind={local.date} label="Date" />
+    </Grid>
+    <TextArea bind={local.diet} label="Dietary needs" rows={2} placeholder="Anything we should know?" />
+    <Checkbox bind={local.agree} label="I agree to the code of conduct" />
+    <Row class="gap-2">
+      <Button variant="primary" disabled={!local.agree || local.name == ""} onClick={call("register", {name: local.name, email: local.email, session: local.session}); set(local.sent, true)}>Register</Button>
+      <Button variant="ghost" onClick={reset()}>Clear</Button>
+    </Row>
+    <If when={local.sent}><Callout tone="success">Thanks, {local.name}. See you on {formatDate(date(local.date))}.</Callout></If>
+  </Card>
+</View>

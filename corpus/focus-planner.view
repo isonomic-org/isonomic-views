@@ -1,0 +1,8 @@
+<View version="0.1" title="Focus planner" local={{ mode: "Pomodoro", blocks: 4, work: 25 }}>
+  <Card title="Plan your focus time">
+    <SegmentedControl bind={local.mode} options={["Pomodoro", "Deep work"]} />
+    <If when={local.mode == "Deep work"}><Callout tone="neutral">Deep work uses 90-minute blocks with 20-minute breaks.</Callout></If>
+    <NumberInput bind={local.blocks} min={1} max={10} label="Blocks" />
+    <Stat label="Total time" value={plural(round(local.blocks * (local.mode == "Pomodoro" ? 30 : 110) / 60 * 10) / 10, "hour", "hours")} caption={local.mode == "Pomodoro" ? "25 minutes on, 5 off" : "90 minutes on, 20 off"} />
+  </Card>
+</View>

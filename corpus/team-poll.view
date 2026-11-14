@@ -1,0 +1,15 @@
+<View version="0.1" title="Team poll" shared={{ options: [{name: "Tacos", votes: 6}, {name: "Sushi", votes: 4}, {name: "Pizza", votes: 9}] }} local={{ voted: "" }}>
+  <Card title="Friday lunch" description={sum(shared.options, o => o.votes) + " votes so far"}>
+    <For each={shared.options} as="o" key={o.name}>
+      <Col class="gap-1">
+        <Row>
+          <Text weight="medium">{o.name}</Text>
+          <Spacer />
+          <Text tone="muted" size="sm">{plural(o.votes, "vote", "votes")}</Text>
+          <Button size="sm" variant={local.voted == o.name ? "primary" : "outline"} disabled={local.voted != ""} onClick={set(o.votes, o.votes + 1); set(local.voted, o.name)}>Vote</Button>
+        </Row>
+        <Progress value={o.votes / max(1, sum(shared.options, x => x.votes)) * 100} />
+      </Col>
+    </For>
+  </Card>
+</View>

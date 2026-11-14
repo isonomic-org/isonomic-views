@@ -1,0 +1,13 @@
+<View version="0.1" title="Shared counter" shared={{ count: 0 }} local={{ mine: 0 }}>
+  <Card title="Visitors in the room" description="Everyone looking at this view sees the same number.">
+    <Row class="gap-6" align="start">
+      <Stat label="Everyone" value={shared.count} />
+      <Stat label="Your clicks" value={local.mine} tone="accent" />
+    </Row>
+    <Row class="gap-2">
+      <Button variant="primary" icon="plus" onClick={set(shared.count, shared.count + 1); set(local.mine, local.mine + 1)}>Arrive</Button>
+      <Button icon="minus" disabled={shared.count == 0} onClick={set(shared.count, shared.count - 1)}>Leave</Button>
+      <Button variant="ghost" onClick={reset(shared.count)}>Reset</Button>
+    </Row>
+  </Card>
+</View>

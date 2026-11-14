@@ -1,0 +1,15 @@
+<View version="0.1" title="Unit converter" local={{ value: 10, kind: "Length", from: "km" }}>
+  <Card title="Unit converter">
+    <SegmentedControl bind={local.kind} options={["Length", "Weight"]} />
+    <Row class="gap-3">
+      <NumberInput bind={local.value} class="flex-1" />
+      <If when={local.kind == "Length"}>
+        <Select bind={local.from} options={[{label: "Kilometres to miles", value: "km"}, {label: "Miles to kilometres", value: "mi"}]} class="w-64" />
+      </If>
+      <If when={local.kind == "Weight"}>
+        <Select bind={local.from} options={[{label: "Kilograms to pounds", value: "kg"}, {label: "Pounds to kilograms", value: "lb"}]} class="w-64" />
+      </If>
+    </Row>
+    <Stat label="Result" value={number(local.value * (local.from == "km" ? 0.621371 : local.from == "mi" ? 1.609344 : local.from == "kg" ? 2.204623 : 0.453592), 2)} caption={local.from == "km" ? "miles" : local.from == "mi" ? "kilometres" : local.from == "kg" ? "pounds" : "kilograms"} />
+  </Card>
+</View>

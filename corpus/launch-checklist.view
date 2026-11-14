@@ -1,0 +1,12 @@
+<View version="0.1" title="Launch checklist" shared={{ items: [{t: "Docs updated", done: true, doc: "doc:docs"}, {t: "Changelog written", done: true, doc: "doc:changelog"}, {t: "Status page ready", done: false, doc: "doc:status"}, {t: "Support briefed", done: false, doc: "doc:support"}] }}>
+  <Card title="Launch checklist" description={count(shared.items, i => !i.done) == 0 ? "Ready to ship" : plural(count(shared.items, i => !i.done), "item", "items") + " left"}>
+    <For each={shared.items} as="i">
+      <Row class="gap-2">
+        <Checkbox bind={i.done} label={i.t} />
+        <Spacer />
+        <Link onClick={open(i.doc)}>Open</Link>
+      </Row>
+    </For>
+    <Button variant="outline" onClick={set(shared.items, map(shared.items, i => merge(i, {done: false})))}>Uncheck all</Button>
+  </Card>
+</View>

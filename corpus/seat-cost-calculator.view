@@ -1,0 +1,11 @@
+<View version="0.1" title="Seat cost calculator" shared={{ seats: 25, price: 49 }}>
+  <Col class="gap-3 p-4">
+    <Heading>Seat cost calculator</Heading>
+    <Slider bind={shared.seats} min={1} max={500} label="Seats" />
+    <NumberInput bind={shared.price} prefix="$" label="Price per seat per month" />
+    <Stat label="Annual cost" value={currency(shared.seats * shared.price * 12)} />
+    <If when={shared.seats > 100}>
+      <Callout tone="info">Volume pricing applies.</Callout>
+    </If>
+  </Col>
+</View>

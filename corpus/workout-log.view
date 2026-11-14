@@ -1,0 +1,13 @@
+<View version="0.1" title="Workout log" shared={{ sets: [{exercise: "Squat", reps: 5, kg: 100}, {exercise: "Bench", reps: 5, kg: 72.5}] }} local={{ exercise: "Deadlift", reps: 5, kg: 120 }}>
+  <Col class="gap-3 p-4">
+    <Heading>Workout log</Heading>
+    <Row class="gap-2 items-end">
+      <Select bind={local.exercise} options={["Squat", "Bench", "Deadlift", "Press"]} label="Exercise" />
+      <NumberInput bind={local.reps} min={1} label="Reps" />
+      <NumberInput bind={local.kg} step={2.5} suffix="kg" label="Weight" />
+      <Button variant="primary" onClick={append(shared.sets, {exercise: local.exercise, reps: local.reps, kg: local.kg})}>Log set</Button>
+    </Row>
+    <Table rows={shared.sets} columns={[{key: "exercise", label: "Exercise"}, {key: "reps", label: "Reps", align: "right"}, {key: "kg", label: "kg", align: "right"}]} empty="No sets yet." />
+    <Stat label="Volume" value={number(sum(shared.sets, s => s.reps * s.kg)) + " kg"} />
+  </Col>
+</View>

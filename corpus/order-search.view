@@ -1,0 +1,18 @@
+<View version="0.1" title="Order search" local={{ q: "", rows: null, searching: false }}>
+  <Col class="gap-3 p-4">
+    <Heading>Find an order</Heading>
+    <Row class="gap-2">
+      <TextField bind={local.q} placeholder="Customer or order number" class="flex-1" />
+      <Button variant="primary" icon="search" onClick={set(local.searching, true); query("search_orders", {q: local.q}, local.rows); set(local.searching, false)}>Search</Button>
+    </Row>
+    <If when={local.searching}><Spinner label="Searching" /></If>
+    <If when={local.rows == null}>
+      <Skeleton lines={3} />
+      <Text tone="muted" size="sm">Results appear here.</Text>
+    </If>
+    <If when={local.rows != null}>
+      <Table rows={local.rows} columns={[{key: "id", label: "Order"}, {key: "customer", label: "Customer"}, {key: "total", label: "Total", format: "currency", align: "right"}, {key: "status", label: "Status"}]} empty="No orders match." />
+      <Row class="gap-2"><Button variant="outline" icon="external-link" onClick={open("orders:" + local.rows[0].id)}>Open first order</Button></Row>
+    </If>
+  </Col>
+</View>

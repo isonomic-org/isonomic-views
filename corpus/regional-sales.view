@@ -1,0 +1,18 @@
+<View version="0.1" title="Regional sales">
+  <Col class="gap-3 p-4">
+    <Heading>Share by region</Heading>
+    <Grid cols={2} class="gap-3">
+      <Chart type="pie" data={data.sales.regions} x="region" y="share" height="sm" />
+      <Col class="gap-2">
+        <For each={sortBy(data.sales.regions, r => r.share, true)} as="r" index="i">
+          <Row class="gap-2">
+            <Badge tone={i == 0 ? "accent" : "neutral"}>{i + 1}</Badge>
+            <Text>{r.region}</Text>
+            <Spacer />
+            <Text weight="semibold">{r.share}%</Text>
+          </Row>
+        </For>
+      </Col>
+    </Grid>
+  </Col>
+</View>

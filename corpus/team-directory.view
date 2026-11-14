@@ -1,0 +1,21 @@
+<View version="0.1" title="Team directory" local={{ q: "" }}>
+  <Col class="gap-3 p-4">
+    <Row>
+      <Heading>Team</Heading>
+      <Spacer />
+      <TextField bind={local.q} placeholder="Search people" class="w-64" />
+    </Row>
+    <For each={filter(data.team, p => contains(lower(p.name), lower(local.q)))} as="p" key={p.name}>
+      <Row class="gap-3 py-2">
+        <Avatar name={p.name} />
+        <Col class="gap-0 flex-1">
+          <Text weight="medium">{p.name}</Text>
+          <Text tone="muted" size="sm">{p.role}</Text>
+        </Col>
+        <Badge tone={p.status == "active" ? "success" : "warning"}>{p.status}</Badge>
+      </Row>
+    </For>
+    <Divider />
+    <Table rows={data.team} columns={[{key: "name", label: "Name"}, {key: "role", label: "Team"}, {key: "tickets", label: "Open tickets", format: "number", align: "right"}]} />
+  </Col>
+</View>

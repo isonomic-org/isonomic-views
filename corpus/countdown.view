@@ -1,0 +1,14 @@
+<View version="0.1" title="Countdown" shared={{ event: "Product launch", when: "2027-01-20" }}>
+  <Card>
+    <Col class="items-center gap-2 py-4">
+      <Icon name="star" size="lg" tone="accent" />
+      <Heading level={2}>{shared.event}</Heading>
+      <Heading level={1}>{plural(daysBetween(date("2026-11-14"), date(shared.when)), "day", "days")}</Heading>
+      <Text tone="muted">until {formatDate(date(shared.when), "EEEE, MMMM d")}, counted from Nov 14, 2026</Text>
+    </Col>
+    <Row class="gap-2">
+      <TextField bind={shared.event} class="flex-1" />
+      <DatePicker bind={shared.when} />
+    </Row>
+  </Card>
+</View>

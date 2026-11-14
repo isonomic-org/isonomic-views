@@ -1,0 +1,21 @@
+<View version="0.1" title="Pricing" local={{ yearly: true }}>
+  <Col class="gap-4 p-4">
+    <Row>
+      <Heading level={1}>Pricing</Heading>
+      <Spacer />
+      <Switch bind={local.yearly} label="Bill yearly" />
+    </Row>
+    <Grid cols={3} class="gap-3">
+      <For each={[{name: "Starter", price: 9, items: ["1 project", "Email support"]}, {name: "Growth", price: 29, items: ["10 projects", "Priority support", "Analytics"]}, {name: "Scale", price: 79, items: ["Unlimited projects", "SSO", "Audit log"]}]} as="plan">
+        <Card title={plan.name} description={local.yearly ? "Billed yearly" : "Billed monthly"}>
+          <Row class="gap-1 items-end">
+            <Heading level={2}>{currency(local.yearly ? plan.price * 0.8 : plan.price, "USD", 0)}</Heading>
+            <Text tone="muted" size="sm">per month</Text>
+          </Row>
+          <List items={plan.items} />
+          <Button variant={plan.name == "Growth" ? "primary" : "outline"} onClick={call("start_trial", {plan: plan.name})}>Start trial</Button>
+        </Card>
+      </For>
+    </Grid>
+  </Col>
+</View>

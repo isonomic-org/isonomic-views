@@ -1,0 +1,23 @@
+<View version="0.1" title="Release notes">
+  <Col class="gap-3 p-4">
+    <Row class="gap-2">
+      <Heading>Release 2.4</Heading>
+      <Badge tone="success">Stable</Badge>
+    </Row>
+    <Accordion multiple>
+      <Section title="New" open>
+        <Markdown>
+          - **Shared views**: everyone looking at a view sees the same state.
+          - Charts now support *area* and *pie* types.
+          - Faster first paint while a view is still streaming.
+        </Markdown>
+      </Section>
+      <Section title="Fixed">
+        <Markdown>
+          1. Sliders no longer jump when the maximum changes.
+          2. Tables keep their scroll position after an edit.
+        </Markdown>
+      </Section>
+    </Accordion>
+  </Col>
+</View>

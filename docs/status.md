@@ -2,6 +2,26 @@
 
 What is built, newest first. Every deviation from the kickoff brief is stated here.
 
+## 2026-11-14 · Corpus and xtask
+
+Built: 49 corpus views (calculators, forms, dashboards, explainers, trackers, quizzes) that
+together use every component, every chart type, all three scopes and all eight actions;
+corpus tests (every view validates with no warnings; every prefix of every view parses and
+complete nodes keep their IDs; patches reproduce the map; a one-line edit gives exactly one
+visible patch); and `cargo xtask` with `screenshots` (every view, light and dark, offscreen),
+`report` (timings), `guide` (authoring guide and JSON Schema into `target/generated/`) and
+`deps` (the headless crates' dependency allow-list and a scan for network, file, process and
+environment access). Every screenshot was looked at before this was opened.
+
+Deviations:
+- The corpus comes before the playground in the PR order, because the playground's examples
+  are corpus files.
+- Screenshots render text with the font the Linux machine has, not the font on a Mac, so
+  glyphs differ slightly from what a Mac shows.
+- `Cargo.lock` is not committed: it is a generated file of about 250 KB, far over the 20 KB
+  file limit. The kit is pinned exactly, so CI resolves the same kit version; other
+  dependencies resolve to their newest compatible versions.
+
 ## 2026-11-14 · Renderer (ui, views-gpui)
 
 Built: the `ui` crate, the only place GPUI Kit is named (pinned `=0.9.1`); `ViewPane`, a

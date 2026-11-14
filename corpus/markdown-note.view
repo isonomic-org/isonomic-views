@@ -1,0 +1,20 @@
+<View version="0.1" title="Meeting notes" local={{ show: true }}>
+  <Col class="gap-3 p-4">
+    <Row>
+      <Heading>Weekly sync</Heading>
+      <Spacer />
+      <Switch bind={local.show} label="Show decisions" />
+    </Row>
+    <Markdown>
+      ## Agenda
+      1. Launch readiness
+      2. Hiring plan
+      3. Customer feedback
+
+      Owners are in `bold`: **Ada** for launch, **Grace** for hiring.
+    </Markdown>
+    <If when={local.show}>
+      <Callout tone="success" title="Decisions">Ship on the 20th; open two platform roles.</Callout>
+    </If>
+  </Col>
+</View>

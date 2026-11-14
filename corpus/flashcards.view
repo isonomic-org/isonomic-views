@@ -1,0 +1,18 @@
+<View version="0.1" title="Spanish flashcards" local={{ card: 0, flipped: false }}>
+  <Col class="gap-3 p-4">
+    <Heading>Spanish verbs</Heading>
+    <Card>
+      <Col class="items-center gap-2 py-6">
+        <Text tone="muted" size="sm">{local.flipped ? "English" : "Spanish"}</Text>
+        <Heading level={1}>{local.flipped ? ["to eat", "to drink", "to sleep", "to read"][local.card] : ["comer", "beber", "dormir", "leer"][local.card]}</Heading>
+      </Col>
+    </Card>
+    <Row class="gap-2">
+      <Button onClick={set(local.card, (local.card + 3) % 4); set(local.flipped, false)} icon="chevron-left">Back</Button>
+      <Button variant="primary" onClick={toggle(local.flipped)}>Flip</Button>
+      <Button onClick={set(local.card, (local.card + 1) % 4); set(local.flipped, false)}>Next</Button>
+      <Spacer />
+      <Badge>{local.card + 1} / 4</Badge>
+    </Row>
+  </Col>
+</View>

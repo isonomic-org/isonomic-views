@@ -1,0 +1,10 @@
+<View version="0.1" title="Reading tracker" shared={{ pages: 142, total: 380, title: "The Left Hand of Darkness" }}>
+  <Card title={shared.title} description="Reading progress">
+    <Progress value={shared.pages / shared.total * 100} label="Read" />
+    <Row class="gap-3">
+      <NumberInput bind={shared.pages} min={0} max={shared.total} step={10} label="Current page" />
+      <NumberInput bind={shared.total} min={1} label="Total pages" />
+    </Row>
+    <Text tone="muted">{shared.total - shared.pages} pages to go, about {round((shared.total - shared.pages) / 30)} days at 30 pages a day.</Text>
+  </Card>
+</View>

@@ -1,0 +1,14 @@
+<View version="0.1" title="Laptop comparison">
+  <Col class="gap-3 p-4">
+    <Heading>Three laptops, side by side</Heading>
+    <Table rows={[
+      {model: "Air 13", weight: 1.24, battery: 18, price: 1099},
+      {model: "Pro 14", weight: 1.55, battery: 22, price: 1999},
+      {model: "Book 15", weight: 1.68, battery: 14, price: 1349}
+    ]} columns={[{key: "model", label: "Model"}, {key: "weight", label: "kg", align: "right"}, {key: "battery", label: "Battery (h)", align: "right"}, {key: "price", label: "Price", format: "currency", align: "right"}]} />
+    <Row class="gap-2">
+      <Tooltip text="Longest battery and the best screen"><Badge tone="accent">Best overall: Pro 14</Badge></Tooltip>
+      <Tooltip text="Lightest and cheapest"><Badge tone="success">Best value: Air 13</Badge></Tooltip>
+    </Row>
+  </Col>
+</View>

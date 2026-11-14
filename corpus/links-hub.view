@@ -1,0 +1,19 @@
+<View version="0.1" title="Team links">
+  <Col class="gap-3 p-4">
+    <Heading>Team links</Heading>
+    <Grid cols={2} class="gap-3">
+      <For each={[{icon: "book-open", t: "Handbook", d: "How we work", to: "doc:handbook"}, {icon: "calendar", t: "Planning", d: "This quarter's plan", to: "doc:plan"}, {icon: "bell", t: "Announcements", d: "News and updates", to: "channel:news"}, {icon: "settings", t: "Security", d: "Policies and contacts", to: "doc:security"}]} as="l">
+        <Card>
+          <Row class="gap-3">
+            <Icon name={l.icon} color="chart-1" />
+            <Col class="gap-0 flex-1">
+              <Link to={l.to}>{l.t}</Link>
+              <Text tone="muted" size="sm">{l.d}</Text>
+            </Col>
+            <Button variant="ghost" size="sm" icon="external-link" onClick={open(l.to)}>Open</Button>
+          </Row>
+        </Card>
+      </For>
+    </Grid>
+  </Col>
+</View>

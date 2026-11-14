@@ -1,0 +1,18 @@
+<View version="0.1" title="API explainer" local={{ tab: "rust" }}>
+  <Col class="gap-3 p-4">
+    <Heading>Creating a view</Heading>
+    <Text tone="muted">Stream the source in; patches arrive as it grows.</Text>
+    <Tabs bind={local.tab}>
+      <Tab label="Rust" value="rust">
+        <Code lang="rust">let mut art = Artifact::create("", Limits::default());
+for chunk in stream {
+    let patches = art.append(&chunk);
+    pane.apply(patches);
+}</Code>
+      </Tab>
+      <Tab label="Contract" value="json">
+        <Code lang="json">{ "edits": [ { "find": "max={500}", "replace": "max={1000}" } ] }</Code>
+      </Tab>
+    </Tabs>
+  </Col>
+</View>

@@ -1,0 +1,12 @@
+<View version="0.1" title="Weather">
+  <Card>
+    <Row class="gap-4">
+      <Icon name="globe" size="lg" color="blue" />
+      <Col class="gap-0">
+        <Heading level={2}>{data.weather.temp}°F, {data.weather.condition}</Heading>
+        <Text tone="muted">{data.weather.city}</Text>
+      </Col>
+    </Row>
+    <Chart type="area" data={data.weather.week} x="day" y="high" color="blue" height="xs" label="Highs this week" />
+  </Card>
+</View>

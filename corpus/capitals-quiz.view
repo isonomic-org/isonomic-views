@@ -1,0 +1,19 @@
+<View version="0.1" title="Capitals quiz" local={{ i: 0, score: 0, picked: "", done: false }}>
+  <Card title="Capitals quiz" description={"Question " + (local.i + 1) + " of 3"}>
+    <If when={!local.done}>
+      <Heading level={3}>{["What is the capital of Canada?", "What is the capital of Australia?", "What is the capital of Morocco?"][local.i]}</Heading>
+      <Col class="gap-2">
+        <For each={[["Toronto", "Ottawa", "Montreal"], ["Sydney", "Melbourne", "Canberra"], ["Casablanca", "Rabat", "Marrakesh"]][local.i]} as="choice">
+          <Button variant={local.picked == choice ? "primary" : "outline"} onClick={set(local.picked, choice)}>{choice}</Button>
+        </For>
+      </Col>
+      <Row class="justify-end">
+        <Button variant="primary" disabled={local.picked == ""} onClick={set(local.score, local.score + (local.picked == ["Ottawa", "Canberra", "Rabat"][local.i] ? 1 : 0)); set(local.picked, ""); set(local.done, local.i == 2); set(local.i, min(local.i + 1, 2))}>Next</Button>
+      </Row>
+    </If>
+    <If when={local.done}>
+      <Callout tone={local.score == 3 ? "success" : "info"} title="Finished">You scored {local.score} out of 3.</Callout>
+      <Button onClick={reset()}>Try again</Button>
+    </If>
+  </Card>
+</View>

@@ -1,0 +1,16 @@
+<View version="0.1" title="Monthly budget" shared={{ income: 5200, rent: 1650, food: 600, transport: 220, fun: 300 }}>
+  <Col class="gap-3 p-4">
+    <Heading>Monthly budget</Heading>
+    <NumberInput bind={shared.income} prefix="$" step={100} label="Income" />
+    <Grid cols={2} class="gap-4">
+      <Col class="gap-3">
+        <Slider bind={shared.rent} min={0} max={4000} step={50} label="Rent" />
+        <Slider bind={shared.food} min={0} max={2000} step={25} label="Food" />
+        <Slider bind={shared.transport} min={0} max={1000} step={10} label="Transport" />
+        <Slider bind={shared.fun} min={0} max={1000} step={10} label="Fun" />
+      </Col>
+      <Chart type="pie" height="sm" data={[{k: "Rent", v: shared.rent}, {k: "Food", v: shared.food}, {k: "Transport", v: shared.transport}, {k: "Fun", v: shared.fun}]} x="k" y="v" />
+    </Grid>
+    <Stat label="Left to save" tone={shared.income - shared.rent - shared.food - shared.transport - shared.fun < 0 ? "danger" : "success"} value={currency(shared.income - shared.rent - shared.food - shared.transport - shared.fun)} />
+  </Col>
+</View>

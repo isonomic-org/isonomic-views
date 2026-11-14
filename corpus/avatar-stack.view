@@ -1,0 +1,12 @@
+<View version="0.1" title="Reviewers">
+  <Card title="Reviewers" description="Who signs off on this change.">
+    <For each={data.team} as="p">
+      <Row class="gap-3">
+        <Avatar name={p.name} size="sm" />
+        <Text>{p.name}</Text>
+        <Spacer />
+        <Tooltip text={p.tickets + " open tickets"}><Icon name={p.tickets > 8 ? "triangle-alert" : "check"} tone={p.tickets > 8 ? "warning" : "success"} size="sm" /></Tooltip>
+      </Row>
+    </For>
+  </Card>
+</View>

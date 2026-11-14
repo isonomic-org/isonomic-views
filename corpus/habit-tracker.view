@@ -1,0 +1,16 @@
+<View version="0.1" title="Habit tracker" shared={{ habits: [{name: "Read 20 pages", done: true}, {name: "Walk 8,000 steps", done: false}, {name: "No phone after 10pm", done: false}] }} local={{ draft: "" }}>
+  <Card title="Today's habits" description={count(shared.habits, h => h.done) + " of " + len(shared.habits) + " done"}>
+    <Progress value={len(shared.habits) == 0 ? 0 : count(shared.habits, h => h.done) / len(shared.habits) * 100} tone="success" />
+    <For each={shared.habits} as="h" key={h.name}>
+      <Row>
+        <Checkbox bind={h.done} label={h.name} />
+        <Spacer />
+        <Button variant="ghost" size="sm" onClick={remove(shared.habits, x => x.name == h.name)}>Remove</Button>
+      </Row>
+    </For>
+    <Row class="gap-2">
+      <TextField bind={local.draft} placeholder="New habit" class="flex-1" />
+      <Button variant="primary" disabled={trim(local.draft) == ""} onClick={append(shared.habits, {name: trim(local.draft), done: false}); set(local.draft, "")}>Add</Button>
+    </Row>
+  </Card>
+</View>

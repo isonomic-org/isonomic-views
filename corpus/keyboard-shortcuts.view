@@ -1,0 +1,12 @@
+<View version="0.1" title="Keyboard shortcuts">
+  <Col class="gap-3 p-4">
+    <Heading>Keyboard shortcuts</Heading>
+    <For each={[{keys: "cmd-k", what: "Open the command bar"}, {keys: "cmd-shift-p", what: "Show all actions"}, {keys: "cmd-enter", what: "Send"}, {keys: "escape", what: "Close the panel"}]} as="s">
+      <Row class="gap-3 py-1">
+        <Kbd>{s.keys}</Kbd>
+        <Text>{s.what}</Text>
+      </Row>
+    </For>
+    <Callout tone="neutral" icon="info">On Windows and Linux, use ctrl where you see cmd.</Callout>
+  </Col>
+</View>

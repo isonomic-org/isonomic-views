@@ -1,0 +1,18 @@
+<View version="0.1" title="System status">
+  <Col class="gap-3 p-4">
+    <Row class="gap-2">
+      <Icon name="circle-check" tone="success" />
+      <Heading level={2}>All systems operational</Heading>
+    </Row>
+    <Divider />
+    <For each={[{name: "API", ok: true, up: "99.99%"}, {name: "Dashboard", ok: true, up: "99.97%"}, {name: "Webhooks", ok: false, up: "99.81%"}, {name: "Search", ok: true, up: "100%"}]} as="s">
+      <Row class="gap-2 py-1">
+        <Icon name={s.ok ? "circle-check" : "triangle-alert"} tone={s.ok ? "success" : "warning"} size="sm" />
+        <Text weight="medium">{s.name}</Text>
+        <Spacer />
+        <Tooltip text="Uptime over the last 90 days"><Text tone="muted" size="sm">{s.up}</Text></Tooltip>
+        <Badge tone={s.ok ? "success" : "warning"}>{s.ok ? "Operational" : "Degraded"}</Badge>
+      </Row>
+    </For>
+  </Col>
+</View>
