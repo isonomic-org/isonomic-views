@@ -2,6 +2,22 @@
 
 What is built, newest first. Every deviation from the kickoff brief is stated here.
 
+## 2026-11-14 · State and actions (views-runtime)
+
+Built: the three scopes (`local` per viewer; `shared` behind the `SharedStore` trait, with an
+in-memory store; `data` read from the host), a reactive cache keyed by node, prop and loop
+instance that records the state paths each value read, so a write drops only overlapping
+entries; `For` frames that map loop variables back to stored items, so `bind={it.done}`
+writes the right list item; the eight actions; and the `Host` trait, whose every method denies
+unless the host grants it. Expression errors, denied requests and failed actions become
+diagnostics. Tests: a slider write re-evaluates exactly one binding; two viewers share
+`shared` and keep their own `local`; the default host denies data, query, call, open and
+images; state survives a document update.
+
+Deviation: `shared` changes reach other viewers when they call `sync()` (the renderer does at
+the start of each frame), not by push. A collaborative store can notify later without changing
+the trait.
+
 ## 2026-11-14 · Node map, IDs and patches (views-ir)
 
 Built: lowering from markup to a flat node map; stable IDs by aligning each re-parse against
