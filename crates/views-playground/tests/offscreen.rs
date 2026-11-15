@@ -1,4 +1,7 @@
 //! Renders the playground offscreen. With `PLAYGROUND_SHOT=<path>` it also writes a PNG.
+//!
+//! The UI platform must be created on the main thread (macOS insists), so this file has its
+//! own `main` instead of the standard harness.
 
 use std::sync::Arc;
 
@@ -8,7 +11,6 @@ use ui::{
 };
 use views_playground::Playground;
 
-#[test]
 fn the_playground_renders() {
     let mut cx = HeadlessAppContext::with_platform(
         ui::platform::current_platform(true).text_system(),
@@ -42,4 +44,9 @@ fn the_playground_renders() {
     if let Ok(path) = std::env::var("PLAYGROUND_SHOT") {
         shot.save(path).expect("save");
     }
+}
+
+fn main() {
+    the_playground_renders();
+    println!("test the_playground_renders ... ok\n\ntest result: ok. 1 passed; 0 failed");
 }

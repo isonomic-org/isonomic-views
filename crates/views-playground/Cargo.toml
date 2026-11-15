@@ -14,5 +14,10 @@ views-runtime.workspace = true
 [dev-dependencies]
 ui = { workspace = true, features = ["test-support"] }
 
+# Runs on the main thread: see the comment at the top of the file.
+[[test]]
+name = "offscreen"
+harness = false
+
 [lints]
 workspace = true

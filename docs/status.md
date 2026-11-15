@@ -2,6 +2,14 @@
 
 What is built, newest first. Every deviation from the kickoff brief is stated here.
 
+## 2026-11-15 · UI tests run on the main thread
+
+The two test files that create a UI platform (`views-gpui/tests/live.rs`,
+`views-playground/tests/offscreen.rs`) now have their own `main` (`harness = false`) and run
+their tests one after another on the main thread. macOS refuses to create the platform on the
+standard harness's worker threads; this is what the shared CI's macOS job needs. `cargo test`
+still runs them, and a name filter still works for `live`.
+
 ## 2026-11-15 · Streaming re-parses only what is new (Milestone 1, issue #8)
 
 Built: `views_markup::Stream` keeps the scanner's state between chunks and scans again only
