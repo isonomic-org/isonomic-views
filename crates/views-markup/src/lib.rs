@@ -4,10 +4,15 @@
 //! and always returns a tree. Unclosed tags are closed; an incomplete tag name, attribute,
 //! expression or closing tag at the end of the input is held back; malformed input becomes
 //! diagnostics with positions. Nothing panics.
+//!
+//! [`Stream`] parses a source that grows at the end without scanning the settled part again.
 
+mod lex;
 mod scan;
+mod stream;
 
-pub use scan::{line_col, parse};
+pub use lex::line_col;
+pub use stream::{Cut, Stream, parse, unclosed};
 
 /// Byte range in the source.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
@@ -80,6 +85,9 @@ pub struct Text {
     /// Whitespace runs collapsed to one space; entities decoded.
     pub text: String,
     pub span: Span,
+    /// The text has ended (a tag or an expression follows, or a literal body is closed); text
+    /// running to the end of the input may still grow.
+    pub complete: bool,
 }
 
 #[derive(Clone, Debug, PartialEq)]

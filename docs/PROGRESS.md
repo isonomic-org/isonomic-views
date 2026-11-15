@@ -11,8 +11,8 @@ the comment on #11; every deviation is in docs/status.md.
 
 | Step | Issue | State |
 | --- | --- | --- |
-| 1. Switch `ui` from gpui-kit to isonomic-ui | #12 | pull request open |
-| 2. Incremental re-parse while streaming | #8 | next |
+| 1. Switch `ui` from gpui-kit to isonomic-ui | #12 | merged (#14) |
+| 2. Incremental re-parse while streaming | #8 | pull request open |
 | Shared state pushed to viewers | #9 | on hold until the engine has a shared-state store |
 | macOS CI | #10 | closed: folds into the shared CI's macOS job |
 

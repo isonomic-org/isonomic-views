@@ -2,6 +2,46 @@
 
 What is built, newest first. Every deviation from the kickoff brief is stated here.
 
+## 2026-11-15 · Streaming re-parses only what is new (Milestone 1, issue #8)
+
+Built: `views_markup::Stream` keeps the scanner's state between chunks and scans again only
+from the start of the construct the previous end of the source cut off; `parse` is a stream
+fed once. In views-ir, `Artifact::append` keeps, for each open element, its node and how many
+of its final children are lowered, so a step lowers only what the parser finished since the
+last one, updates the open elements and the text still being written, and emits patches in
+`diff` order. Complete subtrees are never revisited or re-aligned. Any change that is not text
+added at the end still re-parses in full, then rebuilds the streaming state.
+
+Tests: at every step of streaming each corpus view in random chunks (also under tight limits
+that cross the node, depth, text and source limits), the map and the patches equal a full
+re-parse aligned against the previous map, no node is removed or moved, and no step falls
+back. A stream fed in random chunks shows the same markup tree as `parse` at every step.
+
+Measured (`cargo xtask report`, Linux, release build, 24-byte chunks):
+
+| View | Per streamed node | Worst chunk | Before |
+| --- | --- | --- | --- |
+| 641 nodes | 5.2 us (target 300) | 58 us (target 1,000) | 794 us per node, worst 2.7 ms |
+| 2,000 nodes | 5.3 us | 103 us | not measured |
+
+Deviations and notes:
+- To make streaming and the full re-parse agree, the full re-parse changed in three ways.
+  Only a complete old node counts as an identical subtree (an incomplete one could equal a
+  later sibling and hand it its ID); ties in the alignment go to the earliest pairs; and
+  children whose keys did not match by key still take part in the in-order alignment unless
+  both have keys that differ. Before, a chunk that finished one element and repeated its
+  content could move IDs to the wrong sibling. Edits of complete views are unaffected except
+  in ties.
+- Text running to the end of the source is now `complete: false` (it was always true), and
+  `<!` or `<!-` at the end is held back as a possible comment instead of being reported as a
+  stray `<`. The patch format is unchanged.
+- One case falls back to a full re-parse: a duplicate `key` attribute that rewrites a node's
+  key while its tag is still being written. `Artifact::full_reparses` counts fallbacks.
+- The issue calls the report's view "the 500-node view"; it has 641 nodes.
+- The 2,000-node view draws in 24.2 ms on the software renderer (layout and paint 14.7 ms),
+  over the 16.7 ms frame. The issue sets no frame target for it; the 641-node view draws in
+  7.4 ms.
+
 ## 2026-11-14 · Isonomic UI replaces GPUI Kit (Milestone 1, issue #12)
 
 Built: `crates/ui` now re-exports `isonomic-ui`, pinned to commit `5cdf134` of its main

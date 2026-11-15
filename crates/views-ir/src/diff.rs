@@ -77,7 +77,7 @@ pub fn diff(old: &Doc, new: &Doc) -> Vec<Patch> {
     out
 }
 
-fn data(n: &crate::Node) -> NodeData {
+pub(crate) fn data(n: &crate::Node) -> NodeData {
     NodeData {
         id: n.id,
         kind: n.kind,
@@ -90,7 +90,7 @@ fn data(n: &crate::Node) -> NodeData {
     }
 }
 
-fn prop_changes(
+pub(crate) fn prop_changes(
     id: NodeId,
     op: &BTreeMap<String, String>,
     np: &BTreeMap<String, String>,
