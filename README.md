@@ -21,6 +21,14 @@ Isonomic Chat.
 
 ## Commands
 
+Every command needs Isonomic UI checked out next to this repository, at the commit in
+`UI_REF` (CI does the same with the `UI_DEPLOY_KEY` secret):
+
+```sh
+git clone git@github.com:isonomic-org/isonomic-ui.git ../isonomic-ui
+git -C ../isonomic-ui checkout "$(cat UI_REF)"
+```
+
 ```sh
 cargo test                       # headless crates (default members)
 cargo test --workspace           # everything, including the renderer (needs a GPU or Mesa)

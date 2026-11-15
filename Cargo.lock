@@ -3699,7 +3699,6 @@ checksum = "a6cb138bb79a146c1bd460005623e142ef0181e3d0219cb493e02f7d08a35695"
 [[package]]
 name = "isonomic-ui"
 version = "0.1.0"
-source = "git+https://github.com/isonomic-org/isonomic-ui?rev=5cdf1341cbdc8e34a899ea031b4ae1f4a0b860ee#5cdf1341cbdc8e34a899ea031b4ae1f4a0b860ee"
 dependencies = [
  "gpui-fast",
  "gpui-fast-platform",
@@ -3715,7 +3714,6 @@ dependencies = [
 [[package]]
 name = "isonomic-ui-assets"
 version = "0.1.0"
-source = "git+https://github.com/isonomic-org/isonomic-ui?rev=5cdf1341cbdc8e34a899ea031b4ae1f4a0b860ee#5cdf1341cbdc8e34a899ea031b4ae1f4a0b860ee"
 dependencies = [
  "anyhow",
  "gpui-pre",
@@ -3729,7 +3727,6 @@ dependencies = [
 [[package]]
 name = "isonomic-ui-base"
 version = "0.1.0"
-source = "git+https://github.com/isonomic-org/isonomic-ui?rev=5cdf1341cbdc8e34a899ea031b4ae1f4a0b860ee#5cdf1341cbdc8e34a899ea031b4ae1f4a0b860ee"
 dependencies = [
  "aho-corasick",
  "anyhow",
@@ -3771,7 +3768,6 @@ dependencies = [
 [[package]]
 name = "isonomic-ui-component"
 version = "0.1.0"
-source = "git+https://github.com/isonomic-org/isonomic-ui?rev=5cdf1341cbdc8e34a899ea031b4ae1f4a0b860ee#5cdf1341cbdc8e34a899ea031b4ae1f4a0b860ee"
 dependencies = [
  "anyhow",
  "chrono",
@@ -3818,7 +3814,6 @@ dependencies = [
 [[package]]
 name = "isonomic-ui-macros"
 version = "0.1.0"
-source = "git+https://github.com/isonomic-org/isonomic-ui?rev=5cdf1341cbdc8e34a899ea031b4ae1f4a0b860ee#5cdf1341cbdc8e34a899ea031b4ae1f4a0b860ee"
 dependencies = [
  "proc-macro-crate",
  "proc-macro2",

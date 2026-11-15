@@ -17,6 +17,7 @@ jobs:
     uses: isonomic-org/.github/.github/workflows/rust-ci.yml@main
     secrets: inherit
     with:
+      ui: true
       linux-gui-libs: true
       apt-packages: mesa-vulkan-drivers
       xtask: deps screenshots

@@ -10,9 +10,10 @@ publish.workspace = true
 test-support = ["isonomic-ui/test-support"]
 
 [dependencies]
-# Isonomic UI, pinned to one commit of its main branch. This is the only place the component
-# library is named; move the pin forward deliberately, together with Cargo.lock.
-isonomic-ui = { git = "https://github.com/isonomic-org/isonomic-ui", rev = "5cdf1341cbdc8e34a899ea031b4ae1f4a0b860ee" }
+# Isonomic UI is a sibling checkout (../isonomic-ui next to this repository) at the commit in
+# UI_REF; CI checks it out there with the UI_DEPLOY_KEY secret. This is the only place the
+# component library is named. Move UI_REF forward deliberately, together with Cargo.lock.
+isonomic-ui = { path = "../../../isonomic-ui/crates/ui" }
 
 [lints]
 workspace = true
