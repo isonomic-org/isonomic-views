@@ -1,5 +1,8 @@
 //! Headless UI tests for the renderer: live bindings, scopes across viewers, state that
 //! survives edits and streaming, and the render-time limit.
+//!
+//! The UI platform must be created on the main thread (macOS insists), so this file has its
+//! own `main` that runs the tests one after another there instead of on harness threads.
 
 use std::{cell::Cell, rc::Rc, sync::Arc};
 
@@ -80,7 +83,6 @@ fn pane_with(store: SharedHandle) -> ViewPane {
     ViewPane::with_host(CALC, Rc::new(DenyAll), store, Limits::default())
 }
 
-#[test]
 fn moving_the_slider_updates_the_stat_in_the_same_frame() {
     let mut cx = context();
     let (h, pane) = open(&mut cx, ViewPane::new(CALC));
@@ -109,7 +111,6 @@ fn moving_the_slider_updates_the_stat_in_the_same_frame() {
     assert_eq!(seats, Value::Num(200.0));
 }
 
-#[test]
 fn local_is_per_viewer_and_shared_is_common() {
     let mut cx = context();
     let store = MemoryStore::handle();
@@ -140,7 +141,6 @@ fn local_is_per_viewer_and_shared_is_common() {
     );
 }
 
-#[test]
 fn component_state_survives_an_edit_elsewhere() {
     let mut cx = context();
     let (h, pane) = open(&mut cx, ViewPane::new(CALC));
@@ -202,7 +202,6 @@ fn component_state_survives_an_edit_elsewhere() {
     assert_eq!(shown(&mut cx, &pane, "Heading"), "Seat pricing");
 }
 
-#[test]
 fn every_streamed_prefix_renders() {
     let mut cx = context();
     let (h, pane) = open(&mut cx, ViewPane::new(""));
@@ -237,7 +236,6 @@ impl FrameClock for FakeClock {
     }
 }
 
-#[test]
 fn the_render_time_limit_cuts_a_slow_view() {
     let mut cx = context();
     let src = format!(
@@ -278,7 +276,6 @@ fn the_render_time_limit_cuts_a_slow_view() {
     assert!(drawn < 10, "drew {drawn} of 40 before the budget ran out");
 }
 
-#[test]
 fn an_unknown_tag_is_a_visible_placeholder() {
     let mut cx = context();
     let (_, pane) = open(
@@ -294,4 +291,59 @@ fn an_unknown_tag_is_a_visible_placeholder() {
             .collect()
     });
     assert!(codes.contains(&"unknown-component".to_string()));
+}
+
+/// The tests, in the order they run.
+const TESTS: &[(&str, fn())] = &[
+    (
+        "moving_the_slider_updates_the_stat_in_the_same_frame",
+        moving_the_slider_updates_the_stat_in_the_same_frame,
+    ),
+    (
+        "local_is_per_viewer_and_shared_is_common",
+        local_is_per_viewer_and_shared_is_common,
+    ),
+    (
+        "component_state_survives_an_edit_elsewhere",
+        component_state_survives_an_edit_elsewhere,
+    ),
+    (
+        "every_streamed_prefix_renders",
+        every_streamed_prefix_renders,
+    ),
+    (
+        "the_render_time_limit_cuts_a_slow_view",
+        the_render_time_limit_cuts_a_slow_view,
+    ),
+    (
+        "an_unknown_tag_is_a_visible_placeholder",
+        an_unknown_tag_is_a_visible_placeholder,
+    ),
+];
+
+/// Runs every test whose name contains the first non-flag argument, like the standard harness.
+fn main() {
+    let filter = std::env::args().skip(1).find(|a| !a.starts_with('-'));
+    let mut failed = Vec::new();
+    let mut ran = 0;
+    for (name, test) in TESTS {
+        if filter.as_deref().is_some_and(|f| !name.contains(f)) {
+            continue;
+        }
+        ran += 1;
+        let ok = std::panic::catch_unwind(test).is_ok();
+        println!("test {name} ... {}", if ok { "ok" } else { "FAILED" });
+        if !ok {
+            failed.push(*name);
+        }
+    }
+    let verdict = if failed.is_empty() { "ok" } else { "FAILED" };
+    println!(
+        "\ntest result: {verdict}. {} passed; {} failed",
+        ran - failed.len(),
+        failed.len()
+    );
+    if !failed.is_empty() {
+        std::process::exit(1);
+    }
 }
