@@ -12,11 +12,13 @@ the comment on #11; every deviation is in docs/status.md.
 | Step | Issue | State |
 | --- | --- | --- |
 | 1. Switch `ui` from gpui-kit to isonomic-ui | #12 | merged (#14) |
-| 2. Incremental re-parse while streaming | #8 | pull request open |
+| 2. Incremental re-parse while streaming | #8 | merged (#15) |
 | Shared state pushed to viewers | #9 | on hold until the engine has a shared-state store |
 | macOS CI | #10 | closed: folds into the shared CI's macOS job |
 
-Merges after this batch need Omar's go-ahead in chat.
+The batch the master session approved (Milestone 0, then these two) is merged. Every merge from
+here on needs Omar's go-ahead in chat. Next: switch CI to `isonomic-org/.github`'s
+`rust-ci.yml` once the Desktop session creates it; #9 waits for the engine's shared-state store.
 
 ## Decisions from the master session (November 14, 2026)
 
