@@ -4,8 +4,9 @@
 
 `ViewPane` is a component. It owns an `Artifact` (source and node map), a `Runtime` and the
 component state of every rendered node. Feed it source three ways: `set_source` (whole),
-`append` (streaming) and `apply_edits` (find/replace update). Each re-parse is aligned with the
-previous node map, so IDs and therefore component state survive.
+`append` (streaming) and `apply_edits` (find/replace update). Streaming parses only what is new
+and edits re-parse aligned with the previous node map; either way IDs and therefore component
+state survive (see [ir.md](ir.md)).
 
 ## The keyed reconciler
 
