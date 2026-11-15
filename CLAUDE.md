@@ -13,7 +13,7 @@ Engine for Isonomic Views. A Rust workspace. The spec is `docs/spec.md` and `doc
    access. `cargo xtask deps` enforces the allow-list.
 4. **views-expr depends on no other crate here.**
 5. **Only `ui` names the component library.** Nothing else in the repo names the framework or
-   the kit directly.
+   the library directly, and inside views-gpui only `style.rs` reads the theme or names icons.
 6. **Tokens only.** No raw colors, sizes or durations in views or in the renderer's mapping.
 7. **The host denies by default.** Everything a view needs from outside goes through `Host`.
 8. **Hermetic tests.** No network, no real timers.

@@ -4,8 +4,9 @@
 
 `ViewPane` is a component. It owns an `Artifact` (source and node map), a `Runtime` and the
 component state of every rendered node. Feed it source three ways: `set_source` (whole),
-`append` (streaming) and `apply_edits` (find/replace update). Each re-parse is aligned with the
-previous node map, so IDs and therefore component state survive.
+`append` (streaming) and `apply_edits` (find/replace update). Streaming parses only what is new
+and edits re-parse aligned with the previous node map; either way IDs and therefore component
+state survive (see [ir.md](ir.md)).
 
 ## The keyed reconciler
 
@@ -36,7 +37,15 @@ named colors and chart series. Fields fill the width of a column and share the w
 buttons and toggles keep their natural size. An unknown tag renders as a visible placeholder.
 `Code` and `Markdown` keep line breaks; `Code` content is literal. Charts have their appear
 animation off (animation is out of scope for this milestone). `Kbd` key caps are drawn from
-theme tokens because the kit's `Kbd` only accepts keys known at compile time.
+theme tokens because the library's `Kbd` only accepts keys known at compile time.
+
+## Tokens and icons
+
+`style.rs` is the only file that touches the library's theme or icon set. `style::tokens`
+copies the theme values the renderer uses into a `Tokens` struct, and every other file draws
+with `Tokens`; a theme rename in the library changes that one function. `style::icon` is the
+one table from catalog icon names to the library's `IconName`; a test checks that every name in
+the catalog's icon list has an entry. A name outside the catalog renders as `square`.
 
 ## Limits
 

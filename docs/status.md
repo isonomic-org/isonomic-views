@@ -2,6 +2,69 @@
 
 What is built, newest first. Every deviation from the kickoff brief is stated here.
 
+## 2026-11-15 · Streaming re-parses only what is new (Milestone 1, issue #8)
+
+Built: `views_markup::Stream` keeps the scanner's state between chunks and scans again only
+from the start of the construct the previous end of the source cut off; `parse` is a stream
+fed once. In views-ir, `Artifact::append` keeps, for each open element, its node and how many
+of its final children are lowered, so a step lowers only what the parser finished since the
+last one, updates the open elements and the text still being written, and emits patches in
+`diff` order. Complete subtrees are never revisited or re-aligned. Any change that is not text
+added at the end still re-parses in full, then rebuilds the streaming state.
+
+Tests: at every step of streaming each corpus view in random chunks (also under tight limits
+that cross the node, depth, text and source limits), the map and the patches equal a full
+re-parse aligned against the previous map, no node is removed or moved, and no step falls
+back. A stream fed in random chunks shows the same markup tree as `parse` at every step.
+
+Measured (`cargo xtask report`, Linux, release build, 24-byte chunks):
+
+| View | Per streamed node | Worst chunk | Before |
+| --- | --- | --- | --- |
+| 641 nodes | 5.2 us (target 300) | 58 us (target 1,000) | 794 us per node, worst 2.7 ms |
+| 2,000 nodes | 5.3 us | 103 us | not measured |
+
+Deviations and notes:
+- To make streaming and the full re-parse agree, the full re-parse changed in three ways.
+  Only a complete old node counts as an identical subtree (an incomplete one could equal a
+  later sibling and hand it its ID); ties in the alignment go to the earliest pairs; and
+  children whose keys did not match by key still take part in the in-order alignment unless
+  both have keys that differ. Before, a chunk that finished one element and repeated its
+  content could move IDs to the wrong sibling. Edits of complete views are unaffected except
+  in ties.
+- Text running to the end of the source is now `complete: false` (it was always true), and
+  `<!` or `<!-` at the end is held back as a possible comment instead of being reported as a
+  stray `<`. The patch format is unchanged.
+- One case falls back to a full re-parse: a duplicate `key` attribute that rewrites a node's
+  key while its tag is still being written. `Artifact::full_reparses` counts fallbacks.
+- The issue calls the report's view "the 500-node view"; it has 641 nodes.
+- The 2,000-node view draws in 24.2 ms on the software renderer (layout and paint 14.7 ms),
+  over the 16.7 ms frame. The issue sets no frame target for it; the 641-node view draws in
+  7.4 ms.
+
+## 2026-11-14 · Isonomic UI replaces GPUI Kit (Milestone 1, issue #12)
+
+Built: `crates/ui` now re-exports `isonomic-ui`, pinned to commit `5cdf134` of its main
+branch; no file names gpui-kit any more. Every theme read in the renderer goes through
+`style::tokens` (a `Tokens` struct), and catalog icon names map to the library's `IconName` in
+one table, `style::icon`, with a test that every catalog icon has an entry, so a later theme or
+icon change touches only `views-gpui/src/style.rs`. `Cargo.lock` is committed, seeded from
+Isonomic UI's own lockfile so shared dependencies resolve to the versions it tests, and CI
+builds with `--locked`. CI fetches the private library over SSH with a read-only deploy key
+(`UI_DEPLOY_KEY`), set up by `.github/ui-access.sh`. Every test passes, and all 49 corpus views
+were rendered light and dark on the new library and looked at.
+
+Notes:
+- The switch needed no source changes beyond `ui`: the renamed fork keeps the kit's paths
+  (`ui::component`, `ui::base`), token names and icon file names. The refactor into `Tokens`
+  and the icon table is what keeps the next change to one file.
+- Screenshots now use the fonts Isonomic UI bundles, so the Linux fallback-font deviation
+  below no longer applies.
+- The catalog still allows the same 64 icons. Isonomic UI embeds more; adding names is a
+  catalog change plus one line each in the icon table.
+- `Cargo.lock` is over 20 KB and is pushed with git from Omar's Mac, as agreed with the master
+  session; source and doc files stay under 20 KB, and CI now checks that.
+
 ## 2026-11-14 · Playground (views-playground) and the Milestone 0 gate
 
 Built: `cargo run -p views-playground` with the source on the left (edits re-render live), the
@@ -35,9 +98,8 @@ Deviations:
   are corpus files.
 - Screenshots render text with the font the Linux machine has, not the font on a Mac, so
   glyphs differ slightly from what a Mac shows.
-- `Cargo.lock` is not committed: it is a generated file of about 250 KB, far over the 20 KB
-  file limit. The kit is pinned exactly, so CI resolves the same kit version; other
-  dependencies resolve to their newest compatible versions.
+- `Cargo.lock` was not committed in Milestone 0 (it is over the 20 KB limit). It is committed
+  from Milestone 1 on; see the entry above.
 
 ## 2026-11-14 · Renderer (ui, views-gpui)
 

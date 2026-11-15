@@ -10,7 +10,7 @@ mod display;
 pub mod fixtures;
 mod pane;
 mod render;
-mod style;
+pub mod style;
 mod widgets;
 
 #[cfg(feature = "headless")]

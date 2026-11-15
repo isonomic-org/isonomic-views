@@ -3,11 +3,14 @@
 //! A view is a flat map of nodes keyed by stable ID. Each node has a type, literal props,
 //! bindings (expression props), children and a parent. IDs survive streaming (the source
 //! growing) and edits elsewhere in the source, because each re-parse is aligned against the
-//! previous map before IDs are assigned. Changes between two maps are expressed as patches.
+//! previous map before IDs are assigned. Streaming through [`Artifact::append`] lowers only
+//! what is new and gives the same map and patches as that re-parse. Changes between two maps
+//! are expressed as patches.
 
 mod artifact;
 mod build;
 mod diff;
+mod grow;
 mod limits;
 
 use std::collections::BTreeMap;
@@ -66,7 +69,8 @@ pub struct Node {
     pub children: Vec<NodeId>,
     pub parent: Option<NodeId>,
     pub span: Span,
-    /// The source for this node has fully arrived (element explicitly closed).
+    /// The source for this node has fully arrived: an element was explicitly closed, text was
+    /// ended by a tag or an expression.
     pub complete: bool,
 }
 

@@ -9,8 +9,7 @@ use std::{
 use ui::{
     AnyElement, Context, Entity, IntoElement, ParentElement, Render, Styled, Subscription, Window,
     component::{
-        ActiveTheme, date_picker::DatePickerState, input::InputState, input::TextareaState,
-        slider::SliderState,
+        date_picker::DatePickerState, input::InputState, input::TextareaState, slider::SliderState,
     },
     div,
 };
@@ -231,7 +230,7 @@ impl Render for ViewPane {
             .retain(|k, _| doc.nodes.contains_key(&k.0) && (k.1.0.is_empty() || seen.contains(k)));
         self.tabs.retain(|k, _| doc.nodes.contains_key(&k.0));
         self.open.retain(|k, _| doc.nodes.contains_key(&k.0));
-        let theme = cx.theme();
+        let theme = crate::style::tokens(cx);
         let mut root = div()
             .size_full()
             .bg(theme.background)

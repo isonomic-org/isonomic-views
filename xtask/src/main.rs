@@ -107,6 +107,7 @@ fn screenshots() -> bool {
     let mut c = cargo();
     c.args([
         "run",
+        "--locked",
         "--quiet",
         "-p",
         "views-gpui",
@@ -126,6 +127,7 @@ fn report() -> bool {
     let mut c = cargo();
     c.args([
         "run",
+        "--locked",
         "--quiet",
         "--release",
         "-p",
@@ -174,7 +176,10 @@ fn guide() -> bool {
 /// The headless crates' dependency closure must stay inside the allow-list, and their source
 /// must not touch the network, files or processes.
 fn deps() -> bool {
-    let out = match cargo().args(["metadata", "--format-version", "1"]).output() {
+    let out = match cargo()
+        .args(["metadata", "--locked", "--format-version", "1"])
+        .output()
+    {
         Ok(o) if o.status.success() => o,
         _ => {
             eprintln!("cargo metadata failed");
