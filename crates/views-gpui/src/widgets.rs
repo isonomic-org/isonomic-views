@@ -4,7 +4,7 @@
 use ui::{
     AnyElement, AppContext, Context, IntoElement, ParentElement, SharedString, Styled, Window,
     component::{
-        ActiveTheme, Disableable, Sizable,
+        Disableable, Sizable,
         button::{Button, ButtonVariants},
         checkbox::Checkbox,
         input::{
@@ -165,11 +165,8 @@ impl ViewPane {
             Some("lg") => b.large(),
             _ => b,
         };
-        if let Some(icon) = self
-            .s(id, "icon", frame)
-            .filter(|n| views_catalog::ICONS.contains(&n.as_str()))
-        {
-            b = b.icon(ui::component::Icon::empty().path(format!("icons/{icon}.svg")));
+        if let Some(icon) = self.s(id, "icon", frame).and_then(|n| style::icon(&n)) {
+            b = b.icon(icon);
         }
         b.on_click(cx.listener(move |this, _, _, cx| this.fire(id, "onClick", &f, Value::Null, cx)))
             .into_any_element()
@@ -332,10 +329,18 @@ impl ViewPane {
         self.note(id, frame, &want);
         let mut e = NumberInput::new(&state);
         if let Some(p) = self.s(id, "prefix", frame) {
-            e = e.prefix(div().text_color(cx.theme().muted_foreground).child(p));
+            e = e.prefix(
+                div()
+                    .text_color(crate::style::tokens(cx).muted_foreground)
+                    .child(p),
+            );
         }
         if let Some(sx) = self.s(id, "suffix", frame) {
-            e = e.suffix(div().text_color(cx.theme().muted_foreground).child(sx));
+            e = e.suffix(
+                div()
+                    .text_color(crate::style::tokens(cx).muted_foreground)
+                    .child(sx),
+            );
         }
         e.disabled(self.flag(id, "disabled", frame))
             .into_any_element()

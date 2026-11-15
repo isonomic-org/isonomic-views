@@ -43,8 +43,10 @@ The first five crates do not depend on the UI framework and build and test anywh
 contain no network, file or process access; CI checks their dependency closure against an
 allow-list (`cargo xtask deps`).
 
-Only `ui` names the component library. Until Isonomic UI has a release, `ui` re-exports
-GPUI Kit pinned to an exact version.
+Only `ui` names the component library. It re-exports Isonomic UI (`isonomic-ui`), pinned to one
+git revision of its main branch; moving the pin is a deliberate change made together with
+`Cargo.lock`. Inside the renderer, only `views-gpui/src/style.rs` reads the library's theme or
+names its icons.
 
 ## Decisions (from the kickoff brief)
 

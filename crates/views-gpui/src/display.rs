@@ -4,7 +4,7 @@ use ui::{
     AnyElement, Context, FontWeight, InteractiveElement, IntoElement, ParentElement, SharedString,
     StatefulInteractiveElement, Styled, Window,
     component::{
-        ActiveTheme, Icon, Sizable,
+        Icon, IconName, Sizable,
         alert::{Alert, AlertVariant},
         avatar::Avatar,
         chart::{AreaChart, BarChart, LineChart, PieChart},
@@ -33,7 +33,7 @@ impl ViewPane {
         cx: &mut Context<Self>,
     ) -> AnyElement {
         let id = n.id;
-        let theme = cx.theme().clone();
+        let theme = style::tokens(cx);
         let tone = self.s(id, "tone", frame);
         match n.tag.as_str() {
             "Badge" => {
@@ -188,16 +188,14 @@ impl ViewPane {
             "Icon" => {
                 let name = self
                     .s(id, "name", frame)
-                    .filter(|n| views_catalog::ICONS.contains(&n.as_str()))
-                    .unwrap_or_else(|| "square".into());
+                    .and_then(|n| style::icon(&n))
+                    .unwrap_or(IconName::Square);
                 let color = self
                     .s(id, "color", frame)
                     .map(|c| style::palette(&theme, &c))
                     .or(tone.as_deref().map(|t| style::tone(&theme, t)))
                     .unwrap_or(theme.foreground);
-                let icon = Icon::empty()
-                    .path(format!("icons/{name}.svg"))
-                    .text_color(color);
+                let icon = Icon::new(name).text_color(color);
                 match self.s(id, "size", frame).as_deref() {
                     Some("sm") => icon.size_3p5(),
                     Some("lg") => icon.size_7(),
@@ -229,11 +227,8 @@ impl ViewPane {
                 if let Some(title) = self.s(id, "title", frame) {
                     a = a.title(title);
                 }
-                if let Some(icon) = self
-                    .s(id, "icon", frame)
-                    .filter(|n| views_catalog::ICONS.contains(&n.as_str()))
-                {
-                    a = a.icon(Icon::empty().path(format!("icons/{icon}.svg")));
+                if let Some(icon) = self.s(id, "icon", frame).and_then(|n| style::icon(&n)) {
+                    a = a.icon(Icon::new(icon));
                 }
                 a.into_any_element()
             }
@@ -306,7 +301,7 @@ impl ViewPane {
     }
 
     fn table(&mut self, id: NodeId, frame: &Frame, cx: &mut Context<Self>) -> AnyElement {
-        let theme = cx.theme().clone();
+        let theme = style::tokens(cx);
         let rows = self.rt.eval(id, "rows", frame);
         let rows = rows.as_list().unwrap_or(&[]).to_vec();
         let mut cols: Vec<(String, String, String, String)> = Vec::new();
@@ -402,7 +397,7 @@ impl ViewPane {
     }
 
     fn chart(&mut self, id: NodeId, frame: &Frame, cx: &mut Context<Self>) -> AnyElement {
-        let theme = cx.theme().clone();
+        let theme = style::tokens(cx);
         let data = self.rt.eval(id, "data", frame);
         let x = self.s(id, "x", frame).unwrap_or_default();
         let y = self.s(id, "y", frame).unwrap_or_default();
@@ -420,7 +415,7 @@ impl ViewPane {
             .collect();
         let color = self
             .s(id, "color", frame)
-            .map_or(theme.chart_1, |c| style::palette(&theme, &c));
+            .map_or(theme.chart[0], |c| style::palette(&theme, &c));
         let h = views_catalog::size_px(self.s(id, "height", frame).as_deref().unwrap_or("md"));
         self.note(id, frame, &format!("{} points", points.len()));
         let chart: AnyElement = match self.s(id, "type", frame).as_deref() {

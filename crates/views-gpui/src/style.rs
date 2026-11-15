@@ -1,9 +1,13 @@
 //! Tokens and utility classes mapped onto the design system's theme. No raw values: every
 //! color comes from the theme, every size from the spacing scale or the theme's radii.
+//!
+//! This file is the only place that reads the component library's theme. Everything else in
+//! the renderer draws with [`Tokens`], so a theme rename in the library changes [`tokens`]
+//! and nothing else.
 
 use ui::{
-    App, Hsla, Pixels, Styled,
-    component::{ActiveTheme, Theme},
+    App, Hsla, Pixels, SharedString, Styled,
+    component::{ActiveTheme, IconName},
     px,
 };
 use views_catalog::{Utility, parse_class};
@@ -19,53 +23,186 @@ pub fn size(n: u16) -> Pixels {
     px(n as f32 * UNIT)
 }
 
+/// The theme values the renderer draws with.
+#[derive(Clone, Debug)]
+pub struct Tokens {
+    pub background: Hsla,
+    pub foreground: Hsla,
+    pub muted: Hsla,
+    pub muted_foreground: Hsla,
+    pub secondary: Hsla,
+    pub accent: Hsla,
+    pub border: Hsla,
+    pub primary: Hsla,
+    pub info: Hsla,
+    pub success: Hsla,
+    pub warning: Hsla,
+    pub danger: Hsla,
+    pub table_head: Hsla,
+    pub table_head_foreground: Hsla,
+    pub table_row_border: Hsla,
+    pub table_even: Hsla,
+    pub chart: [Hsla; 5],
+    pub blue: Hsla,
+    pub green: Hsla,
+    pub red: Hsla,
+    pub yellow: Hsla,
+    pub magenta: Hsla,
+    pub cyan: Hsla,
+    pub radius: Pixels,
+    pub radius_lg: Pixels,
+    pub font_family: SharedString,
+    pub mono_font_family: SharedString,
+}
+
+/// The current theme as tokens.
+pub fn tokens(cx: &App) -> Tokens {
+    let t = cx.theme();
+    Tokens {
+        background: t.background,
+        foreground: t.foreground,
+        muted: t.muted,
+        muted_foreground: t.muted_foreground,
+        secondary: t.secondary,
+        accent: t.accent,
+        border: t.border,
+        primary: t.primary,
+        info: t.info,
+        success: t.success,
+        warning: t.warning,
+        danger: t.danger,
+        table_head: t.table_head,
+        table_head_foreground: t.table_head_foreground,
+        table_row_border: t.table_row_border,
+        table_even: t.table_even,
+        chart: [t.chart_1, t.chart_2, t.chart_3, t.chart_4, t.chart_5],
+        blue: t.blue,
+        green: t.green,
+        red: t.red,
+        yellow: t.yellow,
+        magenta: t.magenta,
+        cyan: t.cyan,
+        radius: t.radius,
+        radius_lg: t.radius_lg,
+        font_family: t.font_family.clone(),
+        mono_font_family: t.mono_font_family.clone(),
+    }
+}
+
 /// Color of a semantic tone.
-pub fn tone(theme: &Theme, name: &str) -> Hsla {
+pub fn tone(t: &Tokens, name: &str) -> Hsla {
     match name {
-        "info" => theme.info,
-        "success" => theme.success,
-        "warning" => theme.warning,
-        "danger" => theme.danger,
-        "accent" => theme.primary,
-        "muted" => theme.muted_foreground,
-        _ => theme.foreground,
+        "info" => t.info,
+        "success" => t.success,
+        "warning" => t.warning,
+        "danger" => t.danger,
+        "accent" => t.primary,
+        "muted" => t.muted_foreground,
+        _ => t.foreground,
     }
 }
 
 /// Color of a palette name.
-pub fn palette(theme: &Theme, name: &str) -> Hsla {
+pub fn palette(t: &Tokens, name: &str) -> Hsla {
     match name {
-        "blue" => theme.blue,
-        "green" => theme.green,
-        "red" => theme.red,
-        "yellow" => theme.yellow,
-        "magenta" => theme.magenta,
-        "cyan" => theme.cyan,
-        "gray" => theme.muted_foreground,
-        "chart-2" => theme.chart_2,
-        "chart-3" => theme.chart_3,
-        "chart-4" => theme.chart_4,
-        "chart-5" => theme.chart_5,
-        _ => theme.chart_1,
+        "blue" => t.blue,
+        "green" => t.green,
+        "red" => t.red,
+        "yellow" => t.yellow,
+        "magenta" => t.magenta,
+        "cyan" => t.cyan,
+        "gray" => t.muted_foreground,
+        "chart-2" => t.chart[1],
+        "chart-3" => t.chart[2],
+        "chart-4" => t.chart[3],
+        "chart-5" => t.chart[4],
+        _ => t.chart[0],
     }
 }
 
 /// The nth series color.
-pub fn series(theme: &Theme, i: usize) -> Hsla {
-    [
-        theme.chart_1,
-        theme.chart_2,
-        theme.chart_3,
-        theme.chart_4,
-        theme.chart_5,
-    ][i % 5]
+pub fn series(t: &Tokens, i: usize) -> Hsla {
+    t.chart[i % 5]
+}
+
+/// The library icon that draws a catalog icon name, or None for a name outside the catalog.
+/// This table is the only place catalog icon names meet the library's icon set.
+pub fn icon(name: &str) -> Option<IconName> {
+    use IconName as I;
+    Some(match name {
+        "arrow-down" => I::ArrowDown,
+        "arrow-left" => I::ArrowLeft,
+        "arrow-right" => I::ArrowRight,
+        "arrow-up" => I::ArrowUp,
+        "asterisk" => I::Asterisk,
+        "ban" => I::Ban,
+        "battery" => I::Battery,
+        "bell" => I::Bell,
+        "book-open" => I::BookOpen,
+        "bot" => I::Bot,
+        "building-2" => I::Building2,
+        "calendar" => I::Calendar,
+        "chart-pie" => I::ChartPie,
+        "check" => I::Check,
+        "chevron-down" => I::ChevronDown,
+        "chevron-left" => I::ChevronLeft,
+        "chevron-right" => I::ChevronRight,
+        "chevron-up" => I::ChevronUp,
+        "circle-alert" => I::CircleAlert,
+        "circle-check" => I::CircleCheck,
+        "circle-user" => I::CircleUser,
+        "circle-x" => I::CircleX,
+        "copy" => I::Copy,
+        "cpu" => I::Cpu,
+        "ellipsis" => I::Ellipsis,
+        "external-link" => I::ExternalLink,
+        "eye" => I::Eye,
+        "eye-off" => I::EyeOff,
+        "file" => I::File,
+        "file-text" => I::FileText,
+        "folder" => I::Folder,
+        "folder-open" => I::FolderOpen,
+        "globe" => I::Globe,
+        "hard-drive" => I::HardDrive,
+        "heart" => I::Heart,
+        "inbox" => I::Inbox,
+        "info" => I::Info,
+        "layout-dashboard" => I::LayoutDashboard,
+        "loader" => I::Loader,
+        "map" => I::Map,
+        "maximize" => I::Maximize,
+        "mic" => I::Mic,
+        "minimize" => I::Minimize,
+        "minus" => I::Minus,
+        "moon" => I::Moon,
+        "network" => I::Network,
+        "palette" => I::Palette,
+        "pause" => I::Pause,
+        "play" => I::Play,
+        "plus" => I::Plus,
+        "refresh-cw" => I::RefreshCw,
+        "rotate-cw" => I::RotateCw,
+        "search" => I::Search,
+        "settings" => I::Settings,
+        "square" => I::Square,
+        "square-terminal" => I::SquareTerminal,
+        "star" => I::Star,
+        "star-fill" => I::StarFill,
+        "sun" => I::Sun,
+        "thumbs-down" => I::ThumbsDown,
+        "thumbs-up" => I::ThumbsUp,
+        "triangle-alert" => I::TriangleAlert,
+        "undo" => I::Undo,
+        "user" => I::User,
+        _ => return None,
+    })
 }
 
 /// Apply a class attribute to an element. Unknown words were reported by the validator and
 /// are ignored here.
 pub fn apply<E: Styled>(mut e: E, class: Option<&str>, cx: &App) -> E {
     let Some(class) = class else { return e };
-    let theme = cx.theme();
+    let theme = tokens(cx);
     let (utils, _) = parse_class(class);
     for u in utils {
         e = match u {
@@ -140,5 +277,18 @@ pub fn weight<E: Styled>(e: E, w: &str) -> E {
         "semibold" => e.font_weight(ui::FontWeight::SEMIBOLD),
         "bold" => e.font_weight(ui::FontWeight::BOLD),
         _ => e.font_weight(ui::FontWeight::NORMAL),
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn every_catalog_icon_has_a_library_icon() {
+        let missing: Vec<&str> = views_catalog::ICONS
+            .iter()
+            .copied()
+            .filter(|n| super::icon(n).is_none())
+            .collect();
+        assert!(missing.is_empty(), "no library icon for {missing:?}");
     }
 }
