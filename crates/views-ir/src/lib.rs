@@ -1,3 +1,6 @@
+// Copyright 2026 Anud Inc.
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 //! The Isonomic Views node map.
 //!
 //! A view is a flat map of nodes keyed by stable ID. Each node has a type, literal props,

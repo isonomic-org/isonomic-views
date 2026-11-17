@@ -1,3 +1,6 @@
+// Copyright 2026 Anud Inc.
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 //! Patches between two node maps that share IDs.
 
 use std::collections::{BTreeMap, HashMap, HashSet};

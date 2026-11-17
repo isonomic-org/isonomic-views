@@ -1,3 +1,6 @@
+// Copyright 2026 Anud Inc.
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 //! Headless UI tests for the renderer: live bindings, scopes across viewers, state that
 //! survives edits and streaming, and the render-time limit.
 

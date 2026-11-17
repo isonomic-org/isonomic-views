@@ -1,3 +1,6 @@
+// Copyright 2026 Anud Inc.
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 //! Tokens and utility classes mapped onto the design system's theme. No raw values: every
 //! color comes from the theme, every size from the spacing scale or the theme's radii.
 //!

@@ -1,3 +1,6 @@
+// Copyright 2026 Anud Inc.
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 //! Choice inputs: sliders, selects, date pickers and option lists.
 
 use ui::{

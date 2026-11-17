@@ -1,3 +1,6 @@
+// Copyright 2026 Anud Inc.
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 //! Storage for the `shared` scope: saved with the view, identical for every viewer.
 
 use std::{cell::RefCell, rc::Rc};

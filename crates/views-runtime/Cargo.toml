@@ -3,6 +3,7 @@ name = "views-runtime"
 description = "State scopes, reactive bindings, actions and the host trait for Isonomic Views."
 version.workspace = true
 edition.workspace = true
+license = "GPL-3.0-or-later"
 publish.workspace = true
 
 [dependencies]

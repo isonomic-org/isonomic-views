@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# Copyright 2026 Anud Inc.
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 # Lets git, and so Cargo, fetch the private isonomic-org/isonomic-ui repository over SSH with
 # the read-only deploy key passed in $KEY (the UI_DEPLOY_KEY secret).
 set -euo pipefail

@@ -1,3 +1,6 @@
+// Copyright 2026 Anud Inc.
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 //! A stream fed in chunks shows exactly the tree a fresh parse of the same text gives.
 
 use views_markup::{Cut, Node, Stream, parse};

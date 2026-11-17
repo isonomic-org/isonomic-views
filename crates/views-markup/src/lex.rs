@@ -1,3 +1,6 @@
+// Copyright 2026 Anud Inc.
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 //! Byte classes, brace matching, whitespace and entities.
 
 /// 1-based line and column (in characters) of a byte offset.

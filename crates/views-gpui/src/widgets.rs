@@ -1,3 +1,6 @@
+// Copyright 2026 Anud Inc.
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 //! Inputs. Stateful components keep their state entity per node instance; bound values flow
 //! in on every render and user changes flow out through `write_bind`.
 

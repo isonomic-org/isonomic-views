@@ -1,3 +1,6 @@
+// Copyright 2026 Anud Inc.
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 //! Standard functions. Every function is pure and charged steps for the work it does.
 
 use crate::{

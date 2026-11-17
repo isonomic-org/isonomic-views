@@ -1,3 +1,6 @@
+// Copyright 2026 Anud Inc.
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 //! One streaming step: what the parser finished since the last step, as patches.
 
 use std::collections::{HashMap, VecDeque};

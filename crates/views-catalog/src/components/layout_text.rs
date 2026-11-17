@@ -1,3 +1,6 @@
+// Copyright 2026 Anud Inc.
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 //! Layout and text components.
 
 use crate::{Category as C, Children, Component, Prop, Type::*};

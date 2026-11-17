@@ -27,3 +27,7 @@ Engine for Isonomic Views. A Rust workspace. The spec is `docs/spec.md` and `doc
   `cargo test`.
 - Docs change with behaviour: update `docs/status.md` (newest first) and `docs/PROGRESS.md`.
 - Look at every screenshot you ship (`cargo xtask screenshots`).
+
+## Licence
+
+- Repos stay private. This repository is licensed GPL-3.0-or-later: keep LICENSE at the root unmodified, keep `license = "GPL-3.0-or-later"` in every Cargo.toml, and start every new source file with `Copyright 2026 Anud Inc.` and `SPDX-License-Identifier: GPL-3.0-or-later`. Never remove an existing copyright or licence notice. Never rename or delete a repo.

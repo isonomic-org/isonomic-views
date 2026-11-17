@@ -3,6 +3,7 @@ name = "views-gpui"
 description = "Renders an Isonomic View into native components."
 version.workspace = true
 edition.workspace = true
+license = "GPL-3.0-or-later"
 publish.workspace = true
 
 [features]

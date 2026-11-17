@@ -1,3 +1,6 @@
+// Copyright 2026 Anud Inc.
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 //! JSON Schema for the tree form of a view, generated from the catalog.
 //!
 //! The tree form is the node map written as nested JSON: `{"type": "Slider", "props": {...},

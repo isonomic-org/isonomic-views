@@ -1,3 +1,6 @@
+// Copyright 2026 Anud Inc.
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 //! The corpus is the test suite: every view validates, every prefix of every view parses with
 //! stable IDs, a one-line edit gives a minimal patch, and together the views use every
 //! component, every state scope and every action.

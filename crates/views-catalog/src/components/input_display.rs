@@ -1,3 +1,6 @@
+// Copyright 2026 Anud Inc.
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 //! Input, display and control components.
 
 use super::layout_text::{DISABLED, HEIGHT, LABEL, ON_CHANGE, PLACEHOLDER, SIZE3, TONE, p};

@@ -1,3 +1,6 @@
+// Copyright 2026 Anud Inc.
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 //! Checks a view against the catalog. Diagnostics are machine-readable so a model can repair
 //! its own output.
 

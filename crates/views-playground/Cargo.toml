@@ -3,6 +3,7 @@ name = "views-playground"
 description = "Live editor for Isonomic Views: source, render, diagnostics, replay."
 version.workspace = true
 edition.workspace = true
+license = "GPL-3.0-or-later"
 publish.workspace = true
 
 [dependencies]

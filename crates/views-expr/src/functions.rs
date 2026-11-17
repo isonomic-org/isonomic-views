@@ -1,3 +1,6 @@
+// Copyright 2026 Anud Inc.
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 //! The table of standard functions.
 
 /// Every standard function: name, signature, one-line description. The authoring guide is

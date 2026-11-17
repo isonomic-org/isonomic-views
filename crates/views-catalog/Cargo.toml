@@ -3,6 +3,7 @@ name = "views-catalog"
 description = "The Isonomic Views component catalog, schema, authoring guide and validator."
 version.workspace = true
 edition.workspace = true
+license = "GPL-3.0-or-later"
 publish.workspace = true
 
 [dependencies]
