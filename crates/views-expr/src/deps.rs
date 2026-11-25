@@ -1,3 +1,6 @@
+// Copyright 2026 Anud Inc.
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 //! Static dependency extraction for the reactive graph.
 
 use std::collections::BTreeSet;

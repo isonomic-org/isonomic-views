@@ -1,3 +1,6 @@
+// Copyright 2026 Anud Inc.
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 //! Render views offscreen to PNG files: `views-shots <out-dir> <file.view>...`.
 //! Writes `<name>-light.png` and `<name>-dark.png` and prints one line per file.
 

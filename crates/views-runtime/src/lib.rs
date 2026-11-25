@@ -1,3 +1,6 @@
+// Copyright 2026 Anud Inc.
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 //! Live state for Isonomic Views.
 //!
 //! Three scopes: `local` (per viewer, not saved), `shared` (saved with the view, identical for

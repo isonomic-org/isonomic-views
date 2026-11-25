@@ -4,6 +4,7 @@ description = "Renders an Isonomic View into native components."
 version.workspace = true
 edition.workspace = true
 publish.workspace = true
+license.workspace = true
 
 [features]
 # Offscreen rendering for screenshots and the report.

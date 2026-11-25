@@ -1,3 +1,6 @@
+// Copyright 2026 Anud Inc.
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 //! Conversions between view dates (days since 1970-01-01) and the date picker's values.
 
 use chrono::NaiveDate;

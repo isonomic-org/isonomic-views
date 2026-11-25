@@ -1,3 +1,6 @@
+// Copyright 2026 Anud Inc.
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 //! The one door to the outside world. Everything denies by default.
 
 use std::{collections::BTreeMap, fmt, sync::Arc};

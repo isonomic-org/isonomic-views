@@ -1,3 +1,6 @@
+// Copyright 2026 Anud Inc.
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 //! Calendar dates as days since 1970-01-01 (proleptic Gregorian, no time zone).
 
 const MONTHS: [&str; 12] = [

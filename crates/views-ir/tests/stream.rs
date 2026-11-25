@@ -1,3 +1,6 @@
+// Copyright 2026 Anud Inc.
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 //! Streaming re-parses only what is new, yet gives exactly the map and patches of a full
 //! re-parse aligned against the previous map.
 

@@ -1,3 +1,6 @@
+// Copyright 2026 Anud Inc.
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 //! Parsing a source that grows at the end.
 
 use crate::scan::{self, Pending, State, Tail};

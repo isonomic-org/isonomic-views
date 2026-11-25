@@ -1,3 +1,6 @@
+// Copyright 2026 Anud Inc.
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 //! The scanner. Iterative (no recursion), single pass, linear time.
 //!
 //! The scanner works on a [`State`] it does not own, so a [`crate::Stream`] can keep the state

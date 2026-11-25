@@ -1,3 +1,6 @@
+// Copyright 2026 Anud Inc.
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 //! The view pane: owns the source, the runtime and per-node component state.
 
 use std::{

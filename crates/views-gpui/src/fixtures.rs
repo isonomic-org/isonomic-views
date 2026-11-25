@@ -1,3 +1,6 @@
+// Copyright 2026 Anud Inc.
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 //! Sample data the screenshot and playground hosts grant, so data-bound views show content.
 
 use views_expr::Value;

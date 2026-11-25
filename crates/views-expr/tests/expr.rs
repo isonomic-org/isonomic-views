@@ -1,3 +1,6 @@
+// Copyright 2026 Anud Inc.
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 use std::collections::BTreeMap;
 
 use views_expr::{ErrorKind, Limits, Value, deps, eval_str, evaluate, parse, parse_seq};

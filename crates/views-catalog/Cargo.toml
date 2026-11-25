@@ -4,6 +4,7 @@ description = "The Isonomic Views component catalog, schema, authoring guide and
 version.workspace = true
 edition.workspace = true
 publish.workspace = true
+license.workspace = true
 
 [dependencies]
 views-expr.workspace = true

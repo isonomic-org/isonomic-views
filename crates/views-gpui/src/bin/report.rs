@@ -1,3 +1,6 @@
+// Copyright 2026 Anud Inc.
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 //! Timings for `cargo xtask report`: parse, evaluate and build a view of about 500 nodes and
 //! one at the 2,000-node limit, and the cost of streaming each one in.
 

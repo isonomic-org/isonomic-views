@@ -4,6 +4,7 @@ description = "The Isonomic Views formula language: pure, total, bounded express
 version.workspace = true
 edition.workspace = true
 publish.workspace = true
+license.workspace = true
 
 [dependencies]
 serde_json.workspace = true

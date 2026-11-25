@@ -1,3 +1,6 @@
+// Copyright 2026 Anud Inc.
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 //! The authoring guide: plain text a model is given so it knows what it may write.
 
 use std::fmt::Write as _;

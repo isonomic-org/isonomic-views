@@ -1,3 +1,6 @@
+// Copyright 2026 Anud Inc.
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 //! Renders the playground offscreen. With `PLAYGROUND_SHOT=<path>` it also writes a PNG.
 //!
 //! The UI platform must be created on the main thread (macOS insists), so this file has its

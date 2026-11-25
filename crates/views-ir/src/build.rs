@@ -1,3 +1,6 @@
+// Copyright 2026 Anud Inc.
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 //! Lowering markup to a node map, keeping IDs from the previous map.
 
 use std::{

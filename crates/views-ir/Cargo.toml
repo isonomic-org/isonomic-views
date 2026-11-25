@@ -4,6 +4,7 @@ description = "The Isonomic Views node map: stable IDs, patches, diffing, limits
 version.workspace = true
 edition.workspace = true
 publish.workspace = true
+license.workspace = true
 
 [dependencies]
 views-markup.workspace = true

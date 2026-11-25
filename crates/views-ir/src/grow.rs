@@ -1,3 +1,6 @@
+// Copyright 2026 Anud Inc.
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 //! Streaming: lowering a source that only grows, without touching what has settled.
 //!
 //! [`Grow`] keeps a [`markup::Stream`] and, for each open element, how far its lowering has

@@ -1,3 +1,6 @@
+// Copyright 2026 Anud Inc.
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 //! Number formatting. Fixed to English conventions in this milestone.
 
 /// `1234567.891` with 2 decimals → `1,234,567.89`.
