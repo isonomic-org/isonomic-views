@@ -20,8 +20,7 @@ jobs:
     with:
       # macOS runs only when started by hand, to keep within the Actions budget.
       os: ${{ github.event_name == 'workflow_dispatch' && '["ubuntu-latest", "macos-latest"]' || '["ubuntu-latest"]' }}
-      # cargo fmt --all also checks the sibling isonomic-ui checkout, which is formatted
-      # with 1.98; newer rustfmt lays out some macro arguments differently.
+      # Matches rust-toolchain.toml.
       toolchain: "1.98"
       ui: true
       linux-gui-libs: true
