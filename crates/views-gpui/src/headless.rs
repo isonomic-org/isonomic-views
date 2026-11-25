@@ -1,3 +1,6 @@
+// Copyright 2026 Anud Inc.
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 //! Offscreen rendering for screenshots and timings. Needs a GPU or a software Vulkan driver.
 
 use std::{rc::Rc, sync::Arc, time::Instant};

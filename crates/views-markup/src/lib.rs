@@ -1,3 +1,6 @@
+// Copyright 2026 Anud Inc.
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 //! Streaming, never-failing parser for Isonomic Views markup.
 //!
 //! `parse` accepts any text, including any prefix of a document that is still being written,

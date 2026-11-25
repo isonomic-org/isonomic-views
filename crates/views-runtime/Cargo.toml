@@ -4,6 +4,7 @@ description = "State scopes, reactive bindings, actions and the host trait for I
 version.workspace = true
 edition.workspace = true
 publish.workspace = true
+license.workspace = true
 
 [dependencies]
 views-expr.workspace = true

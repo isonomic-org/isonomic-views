@@ -4,6 +4,7 @@ description = "Live editor for Isonomic Views: source, render, diagnostics, repl
 version.workspace = true
 edition.workspace = true
 publish.workspace = true
+license.workspace = true
 
 [dependencies]
 ui.workspace = true

@@ -1,3 +1,6 @@
+// Copyright 2026 Anud Inc.
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 //! The Isonomic Views formula language.
 //!
 //! Expressions are pure and total: no side effects, no I/O, no unbounded loops, and every

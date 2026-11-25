@@ -1,3 +1,6 @@
+// Copyright 2026 Anud Inc.
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 //! Design tokens a view may name. Arbitrary values are rejected.
 
 /// Semantic tones. The renderer maps each to the design system's colors.

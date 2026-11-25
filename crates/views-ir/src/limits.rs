@@ -1,3 +1,6 @@
+// Copyright 2026 Anud Inc.
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 //! Hard limits. A hostile view can waste its own rectangle and nothing else.
 
 use serde::{Deserialize, Serialize};

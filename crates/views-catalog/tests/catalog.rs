@@ -1,3 +1,6 @@
+// Copyright 2026 Anud Inc.
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 use views_catalog::{
     COMPONENTS, Children, ICONS, Type, authoring_guide, check, component, json_schema,
 };

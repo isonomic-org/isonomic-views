@@ -1,3 +1,6 @@
+// Copyright 2026 Anud Inc.
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 //! The utility-class subset: layout and spacing only, token values only.
 
 use crate::tokens::{SIZES, SPACING};

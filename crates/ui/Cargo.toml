@@ -4,6 +4,7 @@ description = "The single re-export of the Isonomic component library."
 version.workspace = true
 edition.workspace = true
 publish.workspace = true
+license.workspace = true
 
 [features]
 # Headless windows and screenshots, for tests and the screenshot tool.

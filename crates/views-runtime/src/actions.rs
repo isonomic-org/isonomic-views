@@ -1,3 +1,6 @@
+// Copyright 2026 Anud Inc.
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 //! Declarative actions: set, toggle, append, remove, reset, and requests to the host.
 
 use views_expr::{Expr, Value};

@@ -1,3 +1,6 @@
+// Copyright 2026 Anud Inc.
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 //! The reconciler: walks the node map and builds elements. Layout, text and control nodes
 //! live here; inputs are in `widgets`, display components in `display`.
 

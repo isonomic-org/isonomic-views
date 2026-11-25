@@ -1,3 +1,6 @@
+// Copyright 2026 Anud Inc.
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 //! Renders an Isonomic View into native components.
 //!
 //! [`ViewPane`] is a component: give it a source (whole, streamed, or as edits) and it renders

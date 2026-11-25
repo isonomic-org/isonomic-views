@@ -1,3 +1,6 @@
+// Copyright 2026 Anud Inc.
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 //! The Isonomic Views component catalog.
 //!
 //! A versioned registry mapping each tag to a component with a typed prop schema, its events
