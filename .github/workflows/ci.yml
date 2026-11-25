@@ -1,78 +1,29 @@
-name: CI
-
-# Self-contained until isonomic-org/.github provides the shared workflow; then this becomes
-#   jobs: { rust: { uses: isonomic-org/.github/.github/workflows/rust-ci.yml@main } }
+name: ci
 
 on:
+  pull_request:
   push:
     branches: [main]
-  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 permissions:
   contents: read
 
-concurrency:
-  group: ci-${{ github.ref }}
-  cancel-in-progress: true
-
-env:
-  CARGO_TERM_COLOR: always
-  # Cargo fetches the private isonomic-ui dependency with the git CLI, over SSH, using the
-  # read-only deploy key in the UI_DEPLOY_KEY secret.
-  CARGO_NET_GIT_FETCH_WITH_CLI: "true"
-
 jobs:
-  headless:
-    name: headless crates
-    runs-on: ubuntu-24.04
-    steps:
-      - uses: actions/checkout@v4
-      - name: access to isonomic-ui
-        env:
-          KEY: ${{ secrets.UI_DEPLOY_KEY }}
-        run: .github/ui-access.sh
-      - uses: dtolnay/rust-toolchain@stable
-        with:
-          components: rustfmt, clippy
-      - uses: Swatinem/rust-cache@v2
-        with:
-          key: headless
-      - run: cargo fmt --all --check
-      - run: cargo clippy --locked --all-targets -- -D warnings
-      - run: cargo test --locked
-      - name: dependency allow-list
-        run: cargo xtask deps
-      - name: every source and doc file stays under 20 KB
-        run: |
-          big=$(git ls-files -z -- '*.rs' '*.md' '*.toml' '*.yml' '*.json' '*.view' | xargs -0 -r ls -l | awk '$5 > 20480 {print $9" ("$5" bytes)"}')
-          if [ -n "$big" ]; then echo "Over 20 KB:"; echo "$big"; exit 1; fi
-
-  render:
-    name: renderer and screenshots
-    runs-on: ubuntu-24.04
-    steps:
-      - uses: actions/checkout@v4
-      - name: access to isonomic-ui
-        env:
-          KEY: ${{ secrets.UI_DEPLOY_KEY }}
-        run: .github/ui-access.sh
-      - uses: dtolnay/rust-toolchain@stable
-        with:
-          components: clippy
-      - name: system libraries
-        run: |
-          sudo apt-get update -q
-          sudo apt-get install -yq mesa-vulkan-drivers libvulkan-dev libxkbcommon-dev libxkbcommon-x11-dev \
-            libwayland-dev libxcb1-dev libx11-xcb-dev libasound2-dev libfontconfig-dev libfreetype-dev libssl-dev
-      - uses: Swatinem/rust-cache@v2
-        with:
-          key: render
-      - run: cargo clippy --locked --workspace --all-targets --all-features -- -D warnings
-      - run: cargo test --locked --workspace
-      - name: screenshots
-        run: cargo xtask screenshots
-      - uses: actions/upload-artifact@v4
-        if: always() && hashFiles('target/screenshots/*.png') != ''
-        with:
-          name: screenshots
-          path: target/screenshots/
+  rust:
+    uses: isonomic-org/.github/.github/workflows/rust-ci.yml@main
+    secrets: inherit
+    with:
+      # macOS runs only when started by hand, to keep within the Actions budget.
+      os: ${{ github.event_name == 'workflow_dispatch' && '["ubuntu-latest", "macos-latest"]' || '["ubuntu-latest"]' }}
+      # Matches rust-toolchain.toml.
+      toolchain: "1.98"
+      ui: true
+      linux-gui-libs: true
+      apt-packages: mesa-vulkan-drivers
+      xtask: deps screenshots
+      artifacts: target/screenshots

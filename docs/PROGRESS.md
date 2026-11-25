@@ -16,19 +16,30 @@ the comment on #11; every deviation is in docs/status.md.
 | Shared state pushed to viewers | #9 | on hold until the engine has a shared-state store |
 | macOS CI | #10 | closed: folds into the shared CI's macOS job |
 
-The batch the master session approved (Milestone 0, then these two) is merged. Every merge from
-here on needs Omar's go-ahead in chat. Next: switch CI to `isonomic-org/.github`'s
-`rust-ci.yml` once the Desktop session creates it; #9 waits for the engine's shared-state store.
+Both are merged. CI now runs the shared `rust-ci.yml` (#13, the master session's pull request)
+with `ui: true`. #9 waits for the engine's shared-state store.
+
+## Working rules from Omar (November 14, 2026)
+
+- Merge your own pull requests once every check is green. A change to a shared contract (the
+  session event schema once frozen, the SDK wire interface, or `isonomic-org/.github`) gets the
+  label `needs-master` and waits for the master session to merge it.
+- Merge the master session's CI pull request in this repo once it is green.
+- Before each new task, handle open issues labelled `master` first: that is how the master
+  session reaches this repo.
 
 ## Decisions from the master session (November 14, 2026)
 
-- Shared CI: the Desktop session creates `isonomic-org/.github` with `rust-ci.yml` (inputs:
-  apt-packages, extra-steps, upload-artifact-path, rust-toolchain, a macOS job toggle). Switch
-  `.github/workflows/ci.yml` to it with a one-line change once it exists.
-- Isonomic UI: depend on the `isonomic-ui` crate pinned to a git revision. Catalog icon names
-  map to `IconName` in one table and theme reads stay in `views-gpui/src/style.rs`.
+- Shared CI: `isonomic-org/.github` has `rust-ci.yml`; `.github/workflows/ci.yml` calls it.
+  Its `ui: true` input checks out isonomic-ui next to the repository at the commit in `UI_REF`
+  with the `UI_DEPLOY_KEY` secret, the same sibling layout the Desktop and Capsule repos use
+  for the SDK.
+- Isonomic UI: depend on the `isonomic-ui` crate pinned to a git revision (now `UI_REF`, with
+  a path dependency on the sibling checkout). Catalog icon names map to `IconName` in one
+  table and theme reads stay in `views-gpui/src/style.rs`.
 - `Cargo.lock` is exempt from the 20 KB rule. Commit it, pushing with git from Omar's Mac when
-  the connector can't take it, and use `--locked` in CI.
+  the connector can't take it. The shared workflow does not pass `--locked`; `cargo xtask`
+  does.
 - Host and SharedStore for Chat artifacts: the engine side (grants, persistence, push) is the
   Desktop session's; binding artifacts to the SDK is the Chat session's. Grants are per
   artifact, start empty, are always shown to the user, and are decided and stored by the
@@ -36,13 +47,11 @@ here on needs Omar's go-ahead in chat. Next: switch CI to `isonomic-org/.github`
 
 ## Environment notes
 
-- The repo needs the private `isonomic-org/isonomic-ui`. CI reads it with the read-only deploy
-  key in the `UI_DEPLOY_KEY` secret (`.github/ui-access.sh`).
+- The repo needs the private `isonomic-org/isonomic-ui` checked out next to it at `UI_REF`.
+  CI reads it with the read-only deploy key in the `UI_DEPLOY_KEY` secret.
 - Building in the cloud sandbox: it cannot reach isonomic-ui directly. Make a git bundle of the
   pinned commit on Omar's Mac in `~/Code/isonomic/views-share` (a folder shared with the
-  session), stage it in, clone it bare, and point git at it with
-  `git config --global url."file:///<mirror>.git".insteadOf "https://github.com/isonomic-org/isonomic-ui"`
-  plus `CARGO_NET_GIT_FETCH_WITH_CLI=true`. Cargo.lock still records the real URL.
+  session), stage it in, and clone it to `isonomic-ui` next to the working copy.
 - Pushing: Omar's Mac has a clone at `~/Code/isonomic/repos/isonomic-views`. Source
   `~/Code/isonomic/repos/.views-env.sh` first: it routes git over HTTPS through `gh` (signed in
   as QadmiriOmar) and sets the commit identity to Omar Qadmiri <omar@isonomic.com>. The Mac's

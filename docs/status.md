@@ -2,6 +2,30 @@
 
 What is built, newest first. Every deviation from the kickoff brief is stated here.
 
+## 2026-11-15 · CI runs the shared workflow
+
+`.github/workflows/ci.yml` calls `isonomic-org/.github`'s `rust-ci.yml` (the master session's
+#13): fmt, clippy and tests on Linux and macOS with all features, `cargo xtask deps
+screenshots` on Linux with the screenshots uploaded, and the shared file-size and name checks.
+This replaces the repository's own jobs and settles #10 (macOS).
+
+Deviations:
+- Isonomic UI is now a path dependency on a checkout next to the repository, at the commit in
+  `UI_REF` (still `5cdf134`), instead of a git dependency. The shared workflow's `ui: true`
+  checks it out there with the `UI_DEPLOY_KEY` secret, as the Desktop and Capsule repos do for
+  the SDK; it has no way to fetch a private git dependency. `.github/ui-access.sh` is gone, and
+  every cargo command now needs the sibling checkout (README). `Cargo.lock` only lost the
+  library's git source lines.
+- The shared workflow runs clippy and tests without `--locked`; `cargo xtask` still passes it.
+
+## 2026-11-15 · UI tests run on the main thread
+
+The two test files that create a UI platform (`views-gpui/tests/live.rs`,
+`views-playground/tests/offscreen.rs`) now have their own `main` (`harness = false`) and run
+their tests one after another on the main thread. macOS refuses to create the platform on the
+standard harness's worker threads; this is what the shared CI's macOS job needs. `cargo test`
+still runs them, and a name filter still works for `live`.
+
 ## 2026-11-15 · Streaming re-parses only what is new (Milestone 1, issue #8)
 
 Built: `views_markup::Stream` keeps the scanner's state between chunks and scans again only

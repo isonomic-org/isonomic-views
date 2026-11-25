@@ -32,5 +32,10 @@ name = "views-report"
 path = "src/bin/report.rs"
 required-features = ["headless"]
 
+# Runs on the main thread: see the comment at the top of the file.
+[[test]]
+name = "live"
+harness = false
+
 [lints]
 workspace = true
