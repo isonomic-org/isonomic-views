@@ -4,6 +4,7 @@ on:
   pull_request:
   push:
     branches: [main]
+  workflow_dispatch:
 
 concurrency:
   group: ci-${{ github.ref }}
@@ -17,6 +18,8 @@ jobs:
     uses: isonomic-org/.github/.github/workflows/rust-ci.yml@main
     secrets: inherit
     with:
+      # macOS runs only when started by hand, to keep within the Actions budget.
+      os: ${{ github.event_name == 'workflow_dispatch' && '["ubuntu-latest", "macos-latest"]' || '["ubuntu-latest"]' }}
       ui: true
       linux-gui-libs: true
       apt-packages: mesa-vulkan-drivers
