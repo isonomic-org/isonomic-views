@@ -4,9 +4,10 @@
 #
 # Runs on same-repo pull requests only, on Linux only. It does nothing and
 # passes when the SECURITY_REVIEW_KEY secret is not set, so it is safe to
-# land before the key exists. The analyze job fails when the review finds
-# something new in the changed files; the comment job then posts the
-# findings on the pull request.
+# land before the key exists. The key is a model provider API key, used
+# directly with no intermediary service. The analyze job fails when the
+# review finds something new in the changed files; the comment job then
+# posts the findings on the pull request.
 #
 # The analyze job runs pull request code with the key in scope but with
 # read-only repository permissions. Only the comment job can write, and it
@@ -64,7 +65,8 @@ jobs:
 
       - if: steps.key.outputs.present == 'true'
         env:
-          AI_GATEWAY_API_KEY: ${{ secrets.SECURITY_REVIEW_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.SECURITY_REVIEW_KEY }}
+          ANTHROPIC_BASE_URL: https://api.anthropic.com
           CLAUDE_CODE_EXECUTABLE: claude
           BASE_REF: ${{ github.event.pull_request.base.ref }}
         run: |
