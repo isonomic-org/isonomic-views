@@ -1,0 +1,519 @@
+name: rust-ci
+
+# Shared checks for every Isonomic Rust repository. Each public repository
+# keeps its own copy of this file, because a public repository cannot call a
+# workflow kept in a private one. Keep every copy the same: change one, change
+# them all in the same way.
+#
+# A repository's .github/workflows/ci.yml calls it like this:
+#
+#   jobs:
+#     rust:
+#       uses: ./.github/workflows/rust-ci.yml
+#       secrets: inherit
+#       # with:            only where a repository differs from the defaults
+#       #   toolchain: "1.97"
+#       #   linux-gui-libs: true
+#       #   sdk: true
+#       #   ui: true
+#       #   harness: true
+#       #   inference: true
+#       #   chat: true
+#       #   id: true
+#
+# Required status checks are then named:
+#   rust / fmt, clippy, test (ubuntu-latest)
+#   rust / file sizes and names
+# macOS runs on manual and scheduled runs only, as
+#   rust / fmt, clippy, test (macos-latest)
+# Pull requests and pushes to main run Linux: macOS minutes cost about ten
+# times as much, and the monthly budget is fixed.
+
+on:
+  workflow_call:
+    inputs:
+      os:
+        description: >-
+          JSON list of runners for fmt, clippy and test. Empty (the default)
+          means Linux only on pull requests and pushes to main, and Linux and
+          macOS on manual and scheduled runs: macOS minutes cost about ten
+          times as much.
+        type: string
+        default: ""
+      toolchain:
+        description: Rust toolchain, for example stable or 1.97.
+        type: string
+        default: stable
+      features:
+        description: Feature flags passed to clippy and test.
+        type: string
+        default: --all-features
+      linux-gui-libs:
+        description: Install the system libraries the UI framework needs on Linux.
+        type: boolean
+        default: false
+      apt-packages:
+        description: Extra Linux packages to install, space separated.
+        type: string
+        default: ""
+      sdk:
+        description: >-
+          Check out isonomic-sdk next to this repository, at the commit in
+          SDK_REF. Needs the SDK_DEPLOY_KEY secret.
+        type: boolean
+        default: false
+      ui:
+        description: >-
+          Check out isonomic-ui next to this repository, at the commit in
+          UI_REF, or in the SDK checkout's UI_REF when this repository has
+          none. Needs the UI_DEPLOY_KEY secret.
+        type: boolean
+        default: false
+      harness:
+        description: >-
+          Let cargo fetch git dependencies on the private isonomic-harness
+          repo over SSH. Needs the HARNESS_DEPLOY_KEY secret.
+        type: boolean
+        default: false
+      inference:
+        description: >-
+          Check out isonomic-inference next to this repository, at the commit
+          in INFERENCE_REF. Needs the INFERENCE_DEPLOY_KEY secret.
+        type: boolean
+        default: false
+      chat:
+        description: >-
+          Check out isonomic-chat next to this repository, at the commit in
+          CHAT_REF. Needs the CHAT_DEPLOY_KEY secret.
+        type: boolean
+        default: false
+      id:
+        description: >-
+          Check out isonomic-id next to this repository, at the commit in
+          ID_REF. Needs the ID_DEPLOY_KEY secret.
+        type: boolean
+        default: false
+      xtask:
+        description: Space-separated cargo xtask commands to run on Linux after the tests.
+        type: string
+        default: ""
+      artifacts:
+        description: Path, relative to the repository, to upload after the xtask commands.
+        type: string
+        default: ""
+      max-file-bytes:
+        description: Largest allowed size for source and doc files.
+        type: number
+        default: 20480
+      name-scan:
+        description: Fail if an older product name appears in files or commit history.
+        type: boolean
+        default: true
+      licences:
+        description: Check every dependency's licence against the allow-list.
+        type: boolean
+        default: true
+    secrets:
+      SDK_DEPLOY_KEY:
+        required: false
+      UI_DEPLOY_KEY:
+        required: false
+      HARNESS_DEPLOY_KEY:
+        required: false
+      INFERENCE_DEPLOY_KEY:
+        required: false
+      CHAT_DEPLOY_KEY:
+        required: false
+      ID_DEPLOY_KEY:
+        required: false
+
+permissions:
+  contents: read
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  check:
+    name: fmt, clippy, test (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 45
+    outputs:
+      # Only the Linux leg runs the check. Other legs emit nothing, so they
+      # cannot overwrite its result.
+      licences: ${{ runner.os == 'Linux' && steps.deny.outcome || '' }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: >-
+          ${{ fromJSON(inputs.os != '' && inputs.os || ((github.event_name == 'workflow_dispatch'
+          || github.event_name == 'schedule') && '["ubuntu-latest", "macos-latest"]'
+          || '["ubuntu-latest"]')) }}
+    defaults:
+      run:
+        shell: bash
+        working-directory: ${{ (inputs.sdk || inputs.ui || inputs.inference || inputs.chat || inputs.id) && github.event.repository.name || '.' }}
+    steps:
+      # The hosted Linux runner ships tool sets these jobs never use. Removing
+      # them first frees about 20 GB, so a large build and its cache save do
+      # not run out of disk. It takes a few seconds and changes no cache key.
+      - name: Free disk space
+        if: runner.os == 'Linux'
+        # Runs before the checkout, so the job's default directory does not exist yet.
+        working-directory: ${{ github.workspace }}
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL
+          df -h / | tail -1
+      - uses: actions/checkout@v4
+        with:
+          path: ${{ (inputs.sdk || inputs.ui || inputs.inference || inputs.chat || inputs.id) && github.event.repository.name || '' }}
+
+      - name: Read the pinned SDK commit
+        if: inputs.sdk
+        id: sdk
+        env:
+          KEY: ${{ secrets.SDK_DEPLOY_KEY }}
+        run: |
+          if [ -z "$KEY" ]; then
+            echo "::error::Secret SDK_DEPLOY_KEY is not set, so the private isonomic-sdk repo cannot be checked out."
+            exit 1
+          fi
+          echo "ref=$(tr -d '[:space:]' < SDK_REF)" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/checkout@v4
+        if: inputs.sdk
+        with:
+          repository: isonomic-org/isonomic-sdk
+          ref: ${{ steps.sdk.outputs.ref }}
+          path: isonomic-sdk
+          ssh-key: ${{ secrets.SDK_DEPLOY_KEY }}
+
+      - name: Read the pinned UI commit
+        if: inputs.ui
+        id: ui
+        env:
+          KEY: ${{ secrets.UI_DEPLOY_KEY }}
+        run: |
+          if [ -z "$KEY" ]; then
+            echo "::error::Secret UI_DEPLOY_KEY is not set, so the private isonomic-ui repo cannot be checked out."
+            exit 1
+          fi
+          # A repository that gets Isonomic UI through the SDK keeps no UI_REF
+          # of its own: the SDK's pin is the one pin.
+          if [ -f UI_REF ]; then
+            file=UI_REF
+          elif [ -f ../isonomic-sdk/UI_REF ]; then
+            file=../isonomic-sdk/UI_REF
+          else
+            echo "::error::No UI_REF here or in the isonomic-sdk checkout, so the isonomic-ui commit is unknown."
+            exit 1
+          fi
+          echo "ref=$(tr -d '[:space:]' < "$file")" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/checkout@v4
+        if: inputs.ui
+        with:
+          repository: isonomic-org/isonomic-ui
+          ref: ${{ steps.ui.outputs.ref }}
+          path: isonomic-ui
+          ssh-key: ${{ secrets.UI_DEPLOY_KEY }}
+
+      - name: Read the pinned inference commit
+        if: inputs.inference
+        id: inference
+        env:
+          KEY: ${{ secrets.INFERENCE_DEPLOY_KEY }}
+        run: |
+          if [ -z "$KEY" ]; then
+            echo "::error::Secret INFERENCE_DEPLOY_KEY is not set, so the private isonomic-inference repo cannot be checked out."
+            exit 1
+          fi
+          echo "ref=$(tr -d '[:space:]' < INFERENCE_REF)" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/checkout@v4
+        if: inputs.inference
+        with:
+          repository: isonomic-org/isonomic-inference
+          ref: ${{ steps.inference.outputs.ref }}
+          path: isonomic-inference
+          ssh-key: ${{ secrets.INFERENCE_DEPLOY_KEY }}
+
+      - name: Read the pinned Chat commit
+        if: inputs.chat
+        id: chat
+        env:
+          KEY: ${{ secrets.CHAT_DEPLOY_KEY }}
+        run: |
+          if [ -z "$KEY" ]; then
+            echo "::error::Secret CHAT_DEPLOY_KEY is not set, so the private isonomic-chat repo cannot be checked out."
+            exit 1
+          fi
+          echo "ref=$(tr -d '[:space:]' < CHAT_REF)" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/checkout@v4
+        if: inputs.chat
+        with:
+          repository: isonomic-org/isonomic-chat
+          ref: ${{ steps.chat.outputs.ref }}
+          path: isonomic-chat
+          ssh-key: ${{ secrets.CHAT_DEPLOY_KEY }}
+
+      - name: Read the pinned identity commit
+        if: inputs.id
+        id: identity
+        env:
+          KEY: ${{ secrets.ID_DEPLOY_KEY }}
+        run: |
+          if [ -z "$KEY" ]; then
+            echo "::error::Secret ID_DEPLOY_KEY is not set, so the private isonomic-id repo cannot be checked out."
+            exit 1
+          fi
+          echo "ref=$(tr -d '[:space:]' < ID_REF)" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/checkout@v4
+        if: inputs.id
+        with:
+          repository: isonomic-org/isonomic-id
+          ref: ${{ steps.identity.outputs.ref }}
+          path: isonomic-id
+          ssh-key: ${{ secrets.ID_DEPLOY_KEY }}
+
+      - name: Git access to isonomic-harness
+        if: inputs.harness
+        env:
+          KEY: ${{ secrets.HARNESS_DEPLOY_KEY }}
+        run: |
+          if [ -z "$KEY" ]; then
+            echo "::error::Secret HARNESS_DEPLOY_KEY is not set, so cargo cannot fetch the private isonomic-harness repo."
+            exit 1
+          fi
+          mkdir -p ~/.ssh
+          printf '%s\n' "$KEY" > ~/.ssh/isonomic_harness
+          chmod 600 ~/.ssh/isonomic_harness
+          ssh-keyscan -t ed25519,rsa github.com >> ~/.ssh/known_hosts 2>/dev/null
+          printf 'Host github.com\n  IdentityFile ~/.ssh/isonomic_harness\n  IdentitiesOnly yes\n' >> ~/.ssh/config
+          echo "CARGO_NET_GIT_FETCH_WITH_CLI=true" >> "$GITHUB_ENV"
+
+      - name: Linux system libraries
+        if: runner.os == 'Linux' && (inputs.linux-gui-libs || inputs.apt-packages != '')
+        env:
+          GUI: ${{ inputs.linux-gui-libs }}
+          EXTRA: ${{ inputs.apt-packages }}
+        run: |
+          pkgs="$EXTRA"
+          if [ "$GUI" = "true" ]; then
+            pkgs="$pkgs mesa-vulkan-drivers libvulkan-dev libxkbcommon-dev libxkbcommon-x11-dev \
+              libwayland-dev libxcb1-dev libx11-xcb-dev libasound2-dev libfontconfig-dev \
+              libfreetype-dev libssl-dev"
+          fi
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq $pkgs
+
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: ${{ inputs.toolchain }}
+          components: rustfmt, clippy
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: ${{ (inputs.sdk || inputs.ui || inputs.inference || inputs.chat || inputs.id) && github.event.repository.name || '.' }}
+
+      - name: Format
+        run: cargo fmt --all --check
+
+      - name: Clippy
+        env:
+          FEATURES: ${{ inputs.features }}
+        run: cargo clippy --workspace --all-targets $FEATURES -- -D warnings
+
+      - name: Test
+        env:
+          FEATURES: ${{ inputs.features }}
+        run: cargo test --workspace $FEATURES
+
+      # The licence check runs here because this job already has every sibling
+      # checkout and git credential the dependency graph needs. It never fails
+      # this job: the "dependency licences" job below reports its result, so a
+      # licence problem is visible on its own and does not hide a test result.
+      - name: Dependency licences
+        id: deny
+        if: ${{ !cancelled() && runner.os == 'Linux' && inputs.licences }}
+        continue-on-error: true
+        env:
+          # A release that has been public for months, pinned by checksum.
+          DENY_VERSION: "0.20.2"
+          DENY_SHA256: 9f12ed4c49936e09b48bf862b595cde2fe64fcbd9d74dfacac6131ca824c8d5f
+        run: |
+          name="cargo-deny-$DENY_VERSION-x86_64-unknown-linux-musl"
+          curl -fsSL -o "$RUNNER_TEMP/deny.tgz" \
+            "https://github.com/EmbarkStudios/cargo-deny/releases/download/$DENY_VERSION/$name.tar.gz"
+          echo "$DENY_SHA256  $RUNNER_TEMP/deny.tgz" | sha256sum -c -
+          tar -xzf "$RUNNER_TEMP/deny.tgz" -C "$RUNNER_TEMP"
+
+          # The allow-list. Anything not listed is refused, which covers SSPL,
+          # BUSL and crates that declare no licence. Do not add to this list to
+          # make a run pass: report the dependency instead. CDLA-Permissive-2.0,
+          # CC0-1.0, 0BSD, BSL-1.0 and Apache-2.0 WITH LLVM-exception were
+          # approved on 25 Nov 2026.
+          mkdir -p "$RUNNER_TEMP/deny-config"
+          cat > "$RUNNER_TEMP/deny-config/deny.toml" <<'TOML'
+          [licenses]
+          allow = [
+              "Apache-2.0",
+              "Apache-2.0 WITH LLVM-exception",
+              "MIT",
+              "BSD-2-Clause",
+              "BSD-3-Clause",
+              "0BSD",
+              "BSL-1.0",
+              "CC0-1.0",
+              "CDLA-Permissive-2.0",
+              "ISC",
+              "Zlib",
+              "Unicode-3.0",
+              "Unicode-DFS-2016",
+              "MPL-2.0",
+          ]
+          confidence-threshold = 0.8
+
+          # Isonomic's own crates (publish = false) carry Isonomic's own
+          # licences. This check is about what comes in from outside.
+          [licenses.private]
+          ignore = true
+          TOML
+
+          # cargo deny reads deny.toml from the workspace root. The shared list
+          # is put there for this run only; a deny.toml the repository keeps is
+          # set aside and put back, so the shared list is always the one used.
+          own=""
+          if [ -f deny.toml ]; then own="$RUNNER_TEMP/deny.repository.toml"; mv deny.toml "$own"; fi
+          cp "$RUNNER_TEMP/deny-config/deny.toml" deny.toml
+          set +e
+          "$RUNNER_TEMP/$name/cargo-deny" --all-features check licenses > "$RUNNER_TEMP/deny.txt" 2>&1
+          status=$?
+          set -e
+          rm -f deny.toml
+          if [ -n "$own" ]; then mv "$own" deny.toml; fi
+          cat "$RUNNER_TEMP/deny.txt"
+          {
+            echo "### Dependency licences"
+            if [ "$status" -eq 0 ]; then
+              echo "Every dependency's licence is on the allow-list."
+            else
+              echo "Dependencies whose licence is not on the allow-list:"
+              echo '```'
+              { grep -E '^(error|warning)\[|^ +[0-9]+ │ |^ +├ |^ += ' "$RUNNER_TEMP/deny.txt" || true; } | head -200
+              echo '```'
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+          exit "$status"
+
+      - name: xtask
+        if: runner.os == 'Linux' && inputs.xtask != ''
+        env:
+          TASKS: ${{ inputs.xtask }}
+        run: for t in $TASKS; do cargo xtask "$t"; done
+
+      - uses: actions/upload-artifact@v4
+        if: always() && runner.os == 'Linux' && inputs.artifacts != ''
+        with:
+          name: artifacts
+          path: ${{ (inputs.sdk || inputs.ui || inputs.inference || inputs.chat || inputs.id) && format('{0}/{1}', github.event.repository.name, inputs.artifacts) || inputs.artifacts }}
+          if-no-files-found: ignore
+
+  licences:
+    name: dependency licences
+    needs: check
+    if: always() && inputs.licences
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Every dependency's licence is on the allow-list
+        env:
+          OUTCOME: ${{ needs.check.outputs.licences }}
+        run: |
+          case "$OUTCOME" in
+            success) echo "Every dependency's licence is on the allow-list." ;;
+            failure)
+              echo "::error::a dependency's licence is not on the allow-list; see the Dependency licences step of the fmt, clippy, test job and its summary"
+              exit 1 ;;
+            *)
+              echo "::error::the licence check did not run (outcome: '$OUTCOME'); the build probably failed before it"
+              exit 1 ;;
+          esac
+
+  hygiene:
+    name: file sizes and names
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Source and doc files stay under the size limit
+        env:
+          LIMIT: ${{ inputs.max-file-bytes }}
+        run: |
+          big=$(git ls-files -z -- '*.rs' '*.md' '*.toml' '*.yml' '*.yaml' '*.json' \
+            | xargs -0 -r wc -c | awk -v limit="$LIMIT" '$2 != "total" && $1 > limit {print}')
+          if [ -n "$big" ]; then
+            echo "::error::files over $LIMIT bytes:"
+            echo "$big"
+            exit 1
+          fi
+
+      - name: No older names anywhere
+        if: inputs.name-scan
+        env:
+          # The older name is matched by its SHA-256 in lower case, so this
+          # file never holds the name itself.
+          NAME_SHA256: d783b550e263885efc77d617f0bd03fe300cb9a69f69cd84cfe797cad316b236
+          NAME_LENGTH: "9"
+        run: |
+          python3 -I - <<'PY'
+          import hashlib, os, re, subprocess, sys
+
+          want = os.environ["NAME_SHA256"]
+          size = int(os.environ["NAME_LENGTH"])
+          runs = re.compile("[a-z]{%d,}" % size)
+
+          def found(text):
+              for m in runs.finditer(text.lower()):
+                  word = m.group(0)
+                  for i in range(len(word) - size + 1):
+                      if hashlib.sha256(word[i:i + size].encode()).hexdigest() == want:
+                          return True
+              return False
+
+          bad = False
+          listed = subprocess.run(["git", "ls-files", "-z"], capture_output=True, check=True).stdout
+          for raw in listed.split(b"\0"):
+              if not raw:
+                  continue
+              path = raw.decode("utf-8", "replace")
+              try:
+                  with open(raw, "rb") as f:
+                      data = f.read()
+              except (IsADirectoryError, FileNotFoundError):
+                  continue
+              if b"\0" in data[:8000]:
+                  continue
+              text = data.decode("utf-8", "replace")
+              if not found(text):
+                  continue
+              for number, line in enumerate(text.splitlines(), 1):
+                  if found(line):
+                      print(f"::error file={path},line={number}::an older name appears here")
+                      bad = True
+
+          log = subprocess.run(["git", "log", "--format=%an <%ae>%n%s%n%b"],
+                               capture_output=True, check=True).stdout.decode("utf-8", "replace")
+          if found(log):
+              print("::error::an older name appears in the commit history")
+              bad = True
+          sys.exit(1 if bad else 0)
+          PY
