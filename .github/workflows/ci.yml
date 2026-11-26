@@ -15,7 +15,7 @@ permissions:
 
 jobs:
   rust:
-    uses: isonomic-org/.github/.github/workflows/rust-ci.yml@main
+    uses: ./.github/workflows/rust-ci.yml
     secrets: inherit
     with:
       # macOS runs only when started by hand, to keep within the Actions budget.
